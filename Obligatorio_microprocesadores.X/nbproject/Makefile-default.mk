@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main.s teclado.s config.c
+SOURCEFILES_QUOTED_IF_SPACED=main.s teclado.s config.c spi_config.s display_config.s
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/teclado.o ${OBJECTDIR}/config.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/teclado.o.d ${OBJECTDIR}/config.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/teclado.o ${OBJECTDIR}/config.o ${OBJECTDIR}/spi_config.o ${OBJECTDIR}/display_config.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/teclado.o.d ${OBJECTDIR}/config.o.d ${OBJECTDIR}/spi_config.o.d ${OBJECTDIR}/display_config.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/teclado.o ${OBJECTDIR}/config.o
+OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/teclado.o ${OBJECTDIR}/config.o ${OBJECTDIR}/spi_config.o ${OBJECTDIR}/display_config.o
 
 # Source Files
-SOURCEFILES=main.s teclado.s config.c
+SOURCEFILES=main.s teclado.s config.c spi_config.s display_config.s
 
 
 
@@ -99,6 +99,16 @@ ${OBJECTDIR}/teclado.o: teclado.s  .generated_files/flags/default/9812c9fc9a33ac
 	@${RM} ${OBJECTDIR}/teclado.o 
 	${MP_CC} $(MP_EXTRA_AS_PRE)  -D__DEBUG   -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/teclado.o teclado.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--gdwarf-2,-MD="${OBJECTDIR}/teclado.o.d" -mdfp="${DFP_DIR}"
 	
+${OBJECTDIR}/spi_config.o: spi_config.s  .generated_files/flags/default/569b99fc5261d87a0f1229d6273cb8b1e1dbe83c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/spi_config.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  -D__DEBUG   -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/spi_config.o spi_config.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--gdwarf-2,-MD="${OBJECTDIR}/spi_config.o.d" -mdfp="${DFP_DIR}"
+	
+${OBJECTDIR}/display_config.o: display_config.s  .generated_files/flags/default/e745ec57c98da7a86e436945b506ea29e615f3c3 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/display_config.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  -D__DEBUG   -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/display_config.o display_config.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--gdwarf-2,-MD="${OBJECTDIR}/display_config.o.d" -mdfp="${DFP_DIR}"
+	
 else
 ${OBJECTDIR}/main.o: main.s  .generated_files/flags/default/d086ea0032f3ce3563b2c6ea7b08483af5e8188f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
@@ -109,6 +119,16 @@ ${OBJECTDIR}/teclado.o: teclado.s  .generated_files/flags/default/61f9fa5c9165e0
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/teclado.o 
 	${MP_CC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/teclado.o teclado.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--gdwarf-2,-MD="${OBJECTDIR}/teclado.o.d" -mdfp="${DFP_DIR}"
+	
+${OBJECTDIR}/spi_config.o: spi_config.s  .generated_files/flags/default/82507c1b8b3ec43e9637df55c810a324bd216d1b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/spi_config.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/spi_config.o spi_config.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--gdwarf-2,-MD="${OBJECTDIR}/spi_config.o.d" -mdfp="${DFP_DIR}"
+	
+${OBJECTDIR}/display_config.o: display_config.s  .generated_files/flags/default/1d5abd0f46b2b718548ddf055206a167c3837fb4 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/display_config.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/display_config.o display_config.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--gdwarf-2,-MD="${OBJECTDIR}/display_config.o.d" -mdfp="${DFP_DIR}"
 	
 endif
 

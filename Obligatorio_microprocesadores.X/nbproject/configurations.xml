@@ -21,6 +21,8 @@
       <itemPath>main.s</itemPath>
       <itemPath>teclado.s</itemPath>
       <itemPath>config.c</itemPath>
+      <itemPath>spi_config.s</itemPath>
+      <itemPath>display_config.s</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>

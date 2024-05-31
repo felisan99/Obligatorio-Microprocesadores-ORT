@@ -2,7 +2,17 @@
 .text
 # En $a0 entra la fila, en $a1 entra la columna
 main_teclado:
+ 
     
+    
+    
+ seteo_Teclado:
+    li $t0, 0xF
+    sw $t0, TRISE
+    # Los primeros 4 pines son fila, los ultimos 4 son la columna
+    li $t0, 0b11110000
+    sw $t0, PORTE
+    jr $ra
 
 tecla_presionada:
     # 
