@@ -84,14 +84,14 @@ seteo_Display:
 
     # set_osc_frec:
 
-    li $t0, 0xD5        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0xD5        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
 
-    li $t0, 0xF        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0xF        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
     # enable_charge_pump:
 

@@ -1,38 +1,94 @@
-.global main_teclado
+.global seteo_teclado
+.global leer_teclado
+    
 .text
 # En $a0 entra la fila, en $a1 entra la columna
-main_teclado:
- 
-    
-    
-    
- seteo_Teclado:
+   
+# Declaramos los pines del puerto TRISE como salida para los primeros 4 pines y entrada para los ultimos 4 pines
+seteo_teclado:
     li $t0, 0xF
     sw $t0, TRISE
     # Los primeros 4 pines son fila, los ultimos 4 son la columna
     li $t0, 0b11110000
     sw $t0, PORTE
+    
     jr $ra
 
-tecla_presionada:
-    # 
-    li $t0, 0b0001
-    sb $t0, PORTE
-    jal columna_presionada
-    bne $v0, 0, preparar_entrada
-    
-    
-    preparar_entrada:
+# Pone en HIGH de a un PIN y se fija para ese pin si hay alguna tecla presionada, si la hay, devuelve el char
+leer_teclado:
+    # Cuido el STACK
+    addiu $sp, $sp, -4
+    sw $ra, ($sp)
+    # ---------------
+    leer_teclado_loop:
+	li $t0, 0xFFFFFFFE
 	li $a0, 1
-	li $a1, 1
-	beq $
+	sW $t0, PORTE
+	jal columna_presionada
+	bne $v0, 0, se_registro_ingreso
 
-columna_presionada:
-    lb $t0, PORTE
-    andi $t0, $t0, 0xF0
-    srl $t0,$t0, 4
-    move $v0, $t0
+	li $t0, 0xFFFFFFFD
+	li $a0, 2
+	sw $t0, PORTE
+	jal columna_presionada
+	bne $v0, 0, se_registro_ingreso
+
+	li $t0, 0xFFFFFFFB
+	li $a0, 3
+	sw $t0, PORTE
+	jal columna_presionada
+	bne $v0, 0, se_registro_ingreso
+
+	li $t0, 0xFFFFFFF7
+	li $a0, 4
+	sw $t0, PORTE
+	jal columna_presionada
+	bne $v0, 0, se_registro_ingreso
     
+	j leer_teclado_loop
+    
+    se_registro_ingreso:
+	lw $ra, ($sp)
+	addiu $sp, $sp, 4
+	jr $ra
+
+	
+# En $a0 se le pasa la fila que esta en HIGH y lee columna por columna cual esta en HIGH y dado eso entrega en $a1 la columna que lee HIGH
+columna_presionada:
+     # Cuido el STACK
+    addiu $sp, $sp, -4
+    sw $ra, ($sp)
+    # ---------------
+    lw $t0, PORTE
+    andi $t0, $t0, 0xF0
+    
+    beq $t0, 0xE0, columna_1
+    beq $t0, 0xD0, columna_2
+    beq $t0, 0xB0, columna_3
+    beq $t0, 0x70, columna_4
+    li $v0, 0
+    j final_columna
+    
+    columna_1:
+	li $a1, 1
+	jal procesar_teclado
+	j final_columna
+    columna_2:
+	li $a1, 2
+	jal procesar_teclado
+	j final_columna
+    columna_3:
+	li $a1, 3
+	jal procesar_teclado
+	j final_columna
+    columna_4:
+	li $a1, 4
+	jal procesar_teclado
+	j final_columna
+    final_columna:
+	lw $ra, ($sp)
+	addiu $sp, $sp, 4
+	jr $ra
     
 procesar_teclado:
     li $v0, 0
@@ -113,7 +169,9 @@ procesar_teclado:
     char_numeral:
 	li $v0, '#'
 	j final_procesamiento
-jr $ra
+	
+    final_procesamiento:
+	jr $ra
 
 
 
