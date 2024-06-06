@@ -2,44 +2,46 @@
 .global leer_teclado
     
 .text
-# En $a0 entra la fila, en $a1 entra la columna
-   
-# Declaramos los pines del puerto TRISE como salida para los primeros 4 pines y entrada para los ultimos 4 pines
+# PINES DE FILAS : 26, 27, 28, 29 || RE0 a RE3
+# PINES DE COLUMNAS: 30, 31, 32, 33 || RE4 a RE7
+
+# Declaramos los pines del puerto TRISE como salida para los primeros 4 pines (en 0 para digitalOut) y entrada
+# para los ultimos 4 pines (en 1 para digitalIn)
 seteo_teclado:
-    li $t0, 0xF
+    li $t0, 0xF0
     sw $t0, TRISE
-    # Los primeros 4 pines son fila, los ultimos 4 son la columna
-    li $t0, 0b11110000
+    # Los primeros 4 pines son FILA, los ultimos 4 son la COLUMNA
+    li $t0, 0x0
     sw $t0, PORTE
     
     jr $ra
 
-# Pone en HIGH de a un PIN y se fija para ese pin si hay alguna tecla presionada, si la hay, devuelve el char
+# Pone en LOW (porque el digital read es pull up) de a un PIN y se fija para ese pin si hay alguna tecla presionada, si la hay, devuelve el char
 leer_teclado:
     # Cuido el STACK
     addiu $sp, $sp, -4
     sw $ra, ($sp)
     # ---------------
     leer_teclado_loop:
-	li $t0, 0xFFFFFFFE
+	li $t0, 0x1
 	li $a0, 1
-	sW $t0, PORTE
+	sw $t0, PORTE
 	jal columna_presionada
 	bne $v0, 0, se_registro_ingreso
 
-	li $t0, 0xFFFFFFFD
+	li $t0, 0x2
 	li $a0, 2
 	sw $t0, PORTE
 	jal columna_presionada
 	bne $v0, 0, se_registro_ingreso
 
-	li $t0, 0xFFFFFFFB
+	li $t0, 0x4
 	li $a0, 3
 	sw $t0, PORTE
 	jal columna_presionada
 	bne $v0, 0, se_registro_ingreso
 
-	li $t0, 0xFFFFFFF7
+	li $t0, 0x8
 	li $a0, 4
 	sw $t0, PORTE
 	jal columna_presionada
@@ -62,10 +64,10 @@ columna_presionada:
     lw $t0, PORTE
     andi $t0, $t0, 0xF0
     
-    beq $t0, 0xE0, columna_1
-    beq $t0, 0xD0, columna_2
-    beq $t0, 0xB0, columna_3
-    beq $t0, 0x70, columna_4
+    beq $t0, 0x10, columna_1
+    beq $t0, 0x20, columna_2
+    beq $t0, 0x40, columna_3
+    beq $t0, 0x80, columna_4
     li $v0, 0
     j final_columna
     
