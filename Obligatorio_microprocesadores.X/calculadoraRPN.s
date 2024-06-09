@@ -6,48 +6,46 @@ seteo_calculadora:
     la $t0, stack
     sw $t0, puntero
     lb $0, cantidad
+    lb $0, operacion
     jr $ra
     
     
 loop_main_calculadora:
-# Imprimo el estado actual del stack
-    # jal imprimir_stack ----------> FUNCION PANTALLA <-----------
-
-# Pido que ingresen un dato
-    # li $v0, 4
-    # la $a0, msj_entrada ----------> FUNCION PANTALLA <-----------
-    # syscall
-
-# Espero el dato, lo agrego a input y 
-    leer_entrada:
-	# Cuido el STACK
-	addiu $sp, $sp, -4
-	sw $ra, ($sp)
-	# ---------------
-	li $t1, 0 # Largo actual de la entrada
-	la $t2, input
-	loop_leer_entrada:
-	    jal leer_teclado
-	    move $t0, $v0
-	    beq $t0, '#', final_lectura
-	    # beq $t0, '*', cambiar_operacion
-	    # Guarda en input el nuevo numero
-	    sb $t0, ($t2)
-	    addi $t1, $t1, 1
-	    addi $t2, $t2, 1	    
-	    beq $t1, 4, final_lectura
-	    jal esperar_debounce
-	    j loop_leer_entrada
-	final_lectura:
-	    jal procesar_entrada
-	    move $a0, $v0
-	    jal guardar
-	    # Devuelvo el STACK
-	    lw $ra, ($sp)
-	    addiu $sp, $sp, 4
-	    # ---------------
-	    jr $ra
-	    
+    addiu $sp, $sp, -12
+    sw $ra, ($sp)
+    sw $s1, 4($sp)
+    sw $s2, 8($sp)
+    # ---------------
+    leer_nueva_entrada:
+        li $s1, 0 # Largo actual de la entrada
+        la $s2, input
+        loop_leer_entrada:
+            jal leer_teclado
+            beq $v0, 'D', final_lectura_numero
+            beq $v0, '#', eliminar_ultimo_numero
+            beq $v0, '*', cambiar_operacion
+            # Guarda en input el nuevo numero
+            sb $v0, ($s2)
+            addi $s1, $s1, 1
+            addi $s2, $s2, 1	    
+            beq $s1, 4, final_lectura_numero
+            jal esperar_debounce
+            j loop_leer_entrada
+        final_lectura_numero:
+            jal procesar_entrada
+            beq $v1, 1 , entrada_invalida # -----> Mostrar en pantalla "entrada invalida" y vuelvo a loop leer entrada<------
+            move $a0, $v0
+            jal guardar
+            j leer_nueva_entrada
+    fin_calculadora:
+        # Devuelvo el STACK
+        lw $ra, ($sp)
+        lw $s1, 4($sp)
+        lw $s2, 8($sp)
+        addiu $sp, $sp, 12
+        # ---------------
+        jr $ra
+            
     esperar_debounce:
 	li $t0, 0
 	loop_esperar_debounce:
@@ -56,6 +54,49 @@ loop_main_calculadora:
 	    j loop_esperar_debounce
 	final_debounce:
 	    jr $ra
+
+# Elimina el ultimo digito ingresado en input
+    eliminar_ultimo_numero:
+        la $t0, input
+        lb $t1, ($t0)
+        beq $t1, 0, fin_eliminar_ultimo_numero
+        loop_eliminar_ultimo_numero:
+            addi $t0, $t0, 1
+            lb $t1, ($t0)
+            beq $t1, 0, eliminar_numero
+            j loop_eliminar_ultimo_numero
+        eliminar_numero:
+            addi $t0, $t0, -1
+            sb $0, ($t0)
+        fin_eliminar_ultimo_numero:
+            j loop_leer_entrada
+    
+# Evaluo si cambia de operacion, 0 -> no hay operacion, 1 -> suma, 2 -> resta, 3 -> multiplicacion, 4 -> potencia
+    cambiar_operacion:
+        la $t0, operacion
+        lb $t1, ($t0)
+        addi $t1, $t1, 1
+
+        beq $t1, 5, resetear_operacion
+        sb $t1, ($t0)
+
+        jal leer_telcado
+        jal esperar_debounce
+        beq $v0, 'D', final_cambio_operacion
+        beq $v0, '*', cambiar_operacion
+        j entrada_invalida
+        resetear_operacion:
+            li $t2, -1
+            sb $t2, ($t0)
+            j cambiar_operacion
+        final_cambio_operacion:
+            la $t0, operacion
+            lb $t1, ($t0)
+            beq $t1, 0, leer_nueva_entrada
+            beq $t1, 1, sumar
+            beq $t1, 2, restar
+            beq $t1, 3, multiplicar
+            beq $t1, 4, potencia
 
 # Evaluo que entrada es (suma resta multiplicacion division limpiar stack salir)
     la $t0, input
@@ -189,28 +230,28 @@ entrada_invalida:
     li $v0, 4
     #la $a0, msj_entrada_invalida
     syscall
-    j loop_main_calculadora
+    j leer_nueva_entrada
 
 # Imprime en consola el error de operandos insuficientes
 operandos_insuficientes:
     li $v0, 4
     #la $a0, msj_operandos_insuficientes
     syscall
-    j loop_main_calculadora
+    j leer_nueva_entrada
 
 # Saca dos numeros del stack y los resta
 restar:
     jal sacar
     sub $a0, $v1, $v0
     jal guardar
-    j loop_main_calculadora
+    j leer_nueva_entrada
 
 # Saca dos numeros del stack y los suma
 sumar:
     jal sacar
     add $a0, $v1, $v0
     jal guardar
-    j loop_main_calculadora
+    j leer_nueva_entrada
 
 # Saca dos numeros del stack y los multiplica
 multiplicar:
@@ -219,7 +260,7 @@ multiplicar:
     mfhi $t0
     mflo $a0
     jal guardar
-    j loop_main_calculadora
+    j leer_nueva_entrada
 
 # Saca dos numeros del stack y hace la potencia, el penultimo numero elevado al ultimo numero
 potencia:
@@ -233,7 +274,30 @@ potencia:
 	    j loop_potencia
     fin_potencia:
 	    jal guardar
-	    j loop_main_calculadora
+	    j leer_nueva_entrada
+    potencia:
+        jal sacar
+        li $t0,1
+        beqz $v0,exponenteCero
+        bltz $v0,exponenteNegativo
+
+        loopPotencia:
+        beqz $v0,finPotencia
+        mult $v1,$t0
+        mflo $t0
+        addi $v0,$v0,-1
+        j loopPotencia
+
+        finPotencia:
+        la $a0,($t0)
+        
+        volver:
+        jal guardar
+        j leer_nueva_entrada
+
+        exponenteCero:
+        li $a0,1
+        j volver
 
 # Resetea el puntero al stack al origen y el contador de elementos a 0
 limpiar_stack:

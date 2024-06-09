@@ -11,6 +11,7 @@ input: .space 4	    # Espacio para que usuario ingrese datos
 .align 2					
 puntero: .space 4
 cantidad: .space 1
+operacion .space 1
 
 .text
 .global main

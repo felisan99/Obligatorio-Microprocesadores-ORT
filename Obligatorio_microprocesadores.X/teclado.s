@@ -16,43 +16,57 @@ seteo_teclado:
     
     jr $ra
 
-# Pone en LOW (porque el digital read es pull up) de a un PIN y se fija para ese pin si hay alguna tecla presionada, si la hay, devuelve el char
+# Pone en HIGH de a un PIN y se 
+# fija para ese pin si hay alguna tecla presionada, si la hay, devuelve el char
+# si $a0 = 0 --> MODO NORMAL, si $a0 = 1 --> MODO ROT13
+
 leer_teclado:
     # Cuido el STACK
     addiu $sp, $sp, -4
     sw $ra, ($sp)
     # ---------------
+	li $t1, 0 #========
     leer_teclado_loop:
-	li $t0, 0x1
-	li $a0, 1
-	sw $t0, PORTE
-	jal columna_presionada
-	bne $v0, 0, se_registro_ingreso
+		beq $t1, 10000, paso_el_tiempo #======
+		addi $t1, $t1, 1 #=======
 
-	li $t0, 0x2
-	li $a0, 2
-	sw $t0, PORTE
-	jal columna_presionada
-	bne $v0, 0, se_registro_ingreso
+		li $t0, 0x1
+		li $a0, 1
+		sw $t0, PORTE
+		jal columna_presionada
+		bne $v0, 0, se_registro_ingreso
 
-	li $t0, 0x4
-	li $a0, 3
-	sw $t0, PORTE
-	jal columna_presionada
-	bne $v0, 0, se_registro_ingreso
+		li $t0, 0x2
+		li $a0, 2
+		sw $t0, PORTE
+		jal columna_presionada
+		bne $v0, 0, se_registro_ingreso
 
-	li $t0, 0x8
-	li $a0, 4
-	sw $t0, PORTE
-	jal columna_presionada
-	bne $v0, 0, se_registro_ingreso
-    
-	j leer_teclado_loop
+		li $t0, 0x4
+		li $a0, 3
+		sw $t0, PORTE
+		jal columna_presionada
+		bne $v0, 0, se_registro_ingreso
+
+		li $t0, 0x8
+		li $a0, 4
+		sw $t0, PORTE
+		jal columna_presionada
+		bne $v0, 0, se_registro_ingreso
+		
+		j leer_teclado_loop
     
     se_registro_ingreso:
+	# Cuido el STACK
 	lw $ra, ($sp)
 	addiu $sp, $sp, 4
+	# ---------------
 	jr $ra
+
+# FUNCIONES EXCLUSIVAS PARA MODO ROT13
+paso_el_tiempo:
+	li $v0, '-'
+	j se_registro_ingreso
 
 	
 # En $a0 se le pasa la fila que esta en HIGH y lee columna por columna cual esta en HIGH y dado eso entrega en $a1 la columna que lee HIGH
