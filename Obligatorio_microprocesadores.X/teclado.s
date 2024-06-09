@@ -27,7 +27,7 @@ leer_teclado:
     # ---------------
 	li $t1, 0 #========
     leer_teclado_loop:
-		beq $t1, 10000, paso_el_tiempo #======
+		beq $t1, 100000, paso_el_tiempo #======
 		addi $t1, $t1, 1 #=======
 
 		li $t0, 0x1

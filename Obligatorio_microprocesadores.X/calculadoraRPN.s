@@ -1,7 +1,7 @@
 .global seteo_calculadora
 .global loop_main_calculadora
 # -------------------------------------------MAIN-------------------------------------------------------
-
+.text
 seteo_calculadora:
     la $t0, stack
     sw $t0, puntero
@@ -20,6 +20,7 @@ loop_main_calculadora:
         li $s1, 0 # Largo actual de la entrada
         la $s2, input
         loop_leer_entrada:
+            li $a0, 0
             jal leer_teclado
             beq $v0, 'D', final_lectura_numero
             beq $v0, '#', eliminar_ultimo_numero
@@ -46,14 +47,6 @@ loop_main_calculadora:
         # ---------------
         jr $ra
             
-    esperar_debounce:
-	li $t0, 0
-	loop_esperar_debounce:
-	    addi $t0, $t0, 1
-	    beq $t0, 60000, final_debounce
-	    j loop_esperar_debounce
-	final_debounce:
-	    jr $ra
 
 # Elimina el ultimo digito ingresado en input
     eliminar_ultimo_numero:
@@ -80,7 +73,8 @@ loop_main_calculadora:
         beq $t1, 5, resetear_operacion
         sb $t1, ($t0)
 
-        jal leer_telcado
+        li $a0, 0
+        jal leer_teclado
         jal esperar_debounce
         beq $v0, 'D', final_cambio_operacion
         beq $v0, '*', cambiar_operacion
@@ -290,7 +284,7 @@ potencia:
 
         finPotencia:
         la $a0,($t0)
-        
+
         volver:
         jal guardar
         j leer_nueva_entrada

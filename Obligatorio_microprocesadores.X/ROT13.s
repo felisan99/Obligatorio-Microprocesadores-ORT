@@ -1,10 +1,8 @@
 .data
 input_rot: .space 100
 string_rot: .space 100
-.align
+.align 2
 puntero_string: .space 4
-entrada: .asciiz "Entrada: "
-salida: .asciiz "\nSalida: "
 
 .text
 #	Leo el mensaje que se desea encriptar
@@ -14,6 +12,7 @@ main_rot13:
     sw $ra, ($sp)
     sw $s0, 4($sp)
     # ---------------
+    loop_main_rot13:
     la $s0, input_rot
     la $t0, string_rot
     sw $t0, puntero_string
@@ -21,7 +20,9 @@ main_rot13:
         # Leo una primera entrada en modo lectura normal
         li $a0, 0
         jal leer_teclado
-        beq $v0, 'D', procesar_entrada_rot13
+        jal esperar_debounce
+        beq $v0, 'd', procesar_entrada_rot13
+        beq $v0, 'a', fin_rot13
         sb $v0, ($s0)
         addi $s0, $s0, 1
 
@@ -29,11 +30,12 @@ main_rot13:
     loop_repetido:
         li $a0, 1
         jal leer_teclado
-        beq $v0, 'D', procesar_entrada_rot13
+        beq $v0, 'd', procesar_entrada_rot13
+        beq $v0, 'a', fin_rot13
         lb $t1, -1($s0)
         bne $v0, $t1, guardar_caracter
         beq $v0, '-', loop_leer_mensaje 
-        
+
         sb $v0, ($s0)
         addi $s0, $s0, 1
         j loop_repetido
@@ -46,6 +48,8 @@ main_rot13:
         addi $s0, $s0, 1
         j loop_repetido
 fin_rot13:
+    # Limpiar el input y el string
+
     # Devuelvo el STACK
     lw $ra, ($sp)
     lw $s0, 4($sp)
@@ -53,22 +57,36 @@ fin_rot13:
     # ---------------
     jr $ra
 
-procesar_entrada:
+procesar_entrada_rot13:
     la $t0, input_rot
-    loopPrincipal:
-        beq $t0,0, INICIO DE encriptacion #terminó la cadena
-        addi $t1,0 #contador
+    loop_procesar_entrada_rot13:
+        lb $t2, ($t0)
+        beq $t2, 0, fin_procesar_entrada_rot13 #terminó la cadena
+        beq $t2, '#', eliminar_ultimo_caracter
+        li $t1, 0
         lb $a0, ($t0)
-        loopSecuencia:
-            beq $t0,'-',finSecuencia
-            addi $t1,$t1,1
-            addi $t0,$t0,1
-        j loopSecuencia
-        finSecuencia:
+        loop_secuencia_intern:
+            beq $t2,'-',fin_secuencia
+            addi $t1, $t1, 1
+            addi $t0, $t0, 1
+        j loop_secuencia_interna
+        fin_secuencia:
             addi $t0,$t0,1
             move $a1, $t1
             jal procesar_caracter
-            j loopPrincipal
+            j loop_procesar_entrada_rot13
+    fin_procesar_entrada_rot13:
+        j encriptar_rot13
+
+    eliminar_ultimo_caracter:
+        lw $t3, puntero_string
+        addi $t3, $t3, -1
+        blt $t3 string_rot, fin_eliminar_ultimo_caracter
+        sb $0, ($t3)
+        sw $t3, puntero_string
+        fin_eliminar_ultimo_caracter:
+            addi $t0, $t0, 1
+            j loop_procesar_entrada_rot13
     
     # Le paso en $a0 el numero del caracter y $a1 el contador
     procesar_caracter:
@@ -379,8 +397,54 @@ procesar_entrada:
             addi $t0, $t0, 1
             sw $t0, puntero_string
             jr $ra
-            
 
+        caracter_0:
+            lw $t0, puntero_string
+            li $t1, '0'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_1:
+            lw $t0, puntero_string
+            li $t1, '1'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_espacio:
+            lw $t0, puntero_string
+            li $t1, ' '
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_coma:
+            lw $t0, puntero_string
+            li $t1, ','
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_punto: 
+            lw $t0, puntero_string
+            li $t1, '.'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_exclamacion:
+            lw $t0, puntero_string
+            li $t1, '!'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
 
 # Funcion normalizar, recibe en $a1 el contador y lo normaliza a 4 o 5 y devuelve en $v0 el valor normalizado
         normalizar_a_4:
@@ -403,53 +467,54 @@ procesar_entrada:
         fin_normalizar:
             move $v0, $a1
 
-#	Descarto la encriptacion de caracteres que no son letras
-inicio:
-lb $t1, ($t0)		# Cargo el caracter en $t1
-ble $t1, 64, imprimir	# NO ENCRIPTO SI ES MENOR A 'A'
-bge $t1, 123, imprimir	# NO ENCRIPTO SI ES MAYOR A 'z'
-bge $t1, 91, entre_A_a  # Verifico los caracteres que estan entre 'A' y 'a'
-j encriptar
+# FUNCION ENCRIPTACION ROT13
 
-entre_A_a:
-ble $t1, 96, imprimir	# NO ENCRIPTO SI ESTA EN EL MEDIO
-j encriptar
+encriptar_rot13:
+    la $t0, string_rot  # Cargar la dirección del String en $t0
+    loop_encriptar:
+        lb $t1, ($t0)       # Cargar un byte del String en $t1
+    
+        # Verificar si el byte es una letra y convertirla según corresponda
+        beq $t1, 0, fin	# Si el byte es 0 quiere decir que llegamos al final, terminamos el bucle y mostramos mensaje de salida.
+        bgt $t1, 122, proximo #Si el byte es mayor a 122 quiere decir que no es ninguna letra, lo mismo pasa si es menor a 65.
+        blt $t1, 65, proximo
+        bge $t1, 97, minusculas
 
-#	Comienzo el algoritmo para encriptar el mensaje
-encriptar:
-#	Clasifico si desborda y si no desborda lo imprimo
-ble $t1, 90, mayuscula
-bge $t1, 97, minuscula
+    proximo:
+        addi $t0, $t0, 1     # Avanzo al siguiente byte
+        j loop_encriptar
 
-mayuscula:		# Es mayuscula y sumo 13, si queda por arriba de 91 desborda entonces ajusto en label desborda, si no imprimo
-addi, $t1, $t1, 13
-bge $t1, 91, desborda	
-j imprimir
+    minusculas:
+        addi $t1, $t1, 13    # Avanzo 13 posiciones en el alfabeto
+        bgt $t1, 122, ajustar #Si el valor obtenido luego de avanzar es mayor al límite debo ajustarlo
+        sb $t1, ($t0)        # Almaceno el byte resultante
+        j proximo
 
-minuscula:		# Es minuscula y sumo 13, si queda por arriba de 123 desborda entonces ajusto en label desborda, si no imprimo
-addi, $t1, $t1, 13
-bge $t1, 123, desborda
-j imprimir
+    ajustar:
+        addi $t1, $t1, -26   # Ajusto hacia atrás en caso de exceso, con módulo 26
+        sb $t1, 0($t0)       # Almaceno el byte resultante
+        j proximo
 
-desborda:
-addi $t1, $t1, -26
-j imprimir
+fin:
+    # 1 cargar el mensaje en el buffer para mostrar en pantalla
+    
+    # 2 limpiar input y string
+    la $t0, input_rot
+    li $t1, 0
+    loop_limpiar_input:
+        sb $0, ($t0)
+        addi $t0, $t0, 1
+        bne $t1, 99, loop_limpiar_input
+    
+    la $t0, string_rot
+    li $t1, 0
+    loop_limpiar_string:
+        sb $0, ($t0)
+        addi $t0, $t0, 1
+        bne $t1, 99, loop_limpiar_string
+    # 3 volver al loop_main_rot13
+    j loop_main_rot13
 
-#	Imprimo el caracter
-imprimir:
-li $v0, 11
-move $a0, $t1
-syscall
-j siguiente_caracter
-
-#	Paso al siguiente caracter o me voy al final si es el caracter nulo
-siguiente_caracter:
-addi $t0, $t0, 1
-lb $t1, ($t0)
-beq $0, $t1, final
-j inicio
-
-final:
 
 
 

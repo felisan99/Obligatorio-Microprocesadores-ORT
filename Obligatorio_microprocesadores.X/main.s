@@ -10,8 +10,11 @@ stack: .space 44    # Espacio para 10 numeros de 32 bits
 input: .space 4	    # Espacio para que usuario ingrese datos
 .align 2					
 puntero: .space 4
+.align 2
 cantidad: .space 1
-operacion .space 1
+.align 2
+menu_fila .space 1
+menu_columna .space 1
 
 .text
 .global main
@@ -20,13 +23,63 @@ operacion .space 1
 .global cantidad
 .global puntero    
 
-
 main:
     jal seteo_SPI
     jal seteo_Display
     jal seteo_teclado
     jal seteo_calculadora
-    jal loop_main_calculadora
+    loop_menu:
+        li $a0, 0
+        jal leer_teclado
+        beq $v0, '2', cambio_fila
+        beq $v0, '8', cambio_fila
+        beq $v0, '4', cambio_columna
+        beq $v0, '6', cambio_columna
+        beq $v0, 'd', iniciar_aplicacion
+        # MOSTRAR ERROR DE NO INGRESO ALGO VALIDO
+        j loop_menu
     
+    # Caso que ingresan 2 u 8 vas para arriba o para abajo que significa negar el primer bit de lugar_menu
+    cambio_fila:
+        lb $t0, menu_fila
+        xori $t0, $t0, 1 
+        sb $t0, menu_fila
+        j loop_menu
+
+    # Caso que ingresan 4 o 6 vas para derecha o para izquierda que significa negar el segundo bit de lugar_menu
+    cambio_columna:
+        lb $t0, menu_columna
+        xori $t0, $t0, 1 
+        sb $t0, menu_columna
+        j loop_menu
+
+    iniciar_aplicacion:
+        lb $t0, menu_fila
+        lb $t1, menu_columna
+        andi $t0, $t0, 1
+        andi $t1, $t1, 1
+        beq $t0, 0, fila_1
+        beq $t0, 1, fila_2
+
+        fila_1:
+            beq $t1, 0, inicio_calculadora
+            beq $t1, 1, inicio_rot13
+        fila_2:
+            beq $t1, 0, inicio_opcional
+            beq $t1, 1, inicio_extra
+    
+    inicio_calculadora:
+        jal loop_main_calculadora
+        j loop_menu
+    inicio_rot13:
+        jal loop_main_rot13
+        j loop_menu
+    inicio_opcional:
+    #    jal loop_main_opcional
+        j loop_menu
+    inicio_extra:
+    #    jal loop_main_extra
+        j loop_menu
 fin:
     j fin
+

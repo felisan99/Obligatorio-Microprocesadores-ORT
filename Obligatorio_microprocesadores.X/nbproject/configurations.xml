@@ -25,6 +25,7 @@
       <itemPath>display_config.s</itemPath>
       <itemPath>ROT13.s</itemPath>
       <itemPath>calculadoraRPN.s</itemPath>
+      <itemPath>utilidades.s</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
