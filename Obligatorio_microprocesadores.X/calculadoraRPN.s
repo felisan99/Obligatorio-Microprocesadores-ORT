@@ -1,5 +1,5 @@
 .global seteo_calculadora
-.global loop_main_calculadora
+.global main_calculadora
 # -------------------------------------------MAIN-------------------------------------------------------
 .text
 seteo_calculadora:
@@ -10,7 +10,7 @@ seteo_calculadora:
     jr $ra
     
     
-loop_main_calculadora:
+main_calculadora:
     addiu $sp, $sp, -12
     sw $ra, ($sp)
     sw $s1, 4($sp)
@@ -92,28 +92,6 @@ loop_main_calculadora:
             beq $t1, 3, multiplicar
             beq $t1, 4, potencia
 
-# Evaluo que entrada es (suma resta multiplicacion division limpiar stack salir)
-    la $t0, input
-    lw $t1, ($t0)
-    andi $t0, $t1, 0xff
-    andi $t2, $t1, 0x0000ff00
-    bne $t2, 0x00000a00, no_es_comando
-
-    beq $t0, 99, limpiar_stack
-    beq $t0, 120, fin
-    beq $t0, 43, sumar
-    beq $t0,45, restar
-    beq $t0, 42, multiplicar
-    beq $t0, 112, potencia
-    no_es_comando:
-# Si no es un comando entonces proceso la entrada
-    jal procesar_entrada
-
-# Si procesar entrada da 1 en $v1 es porque la entrada no es valida
-    beq $v1, 1, entrada_invalida
-    move $a0, $v0
-    jal guardar
-    j loop_main_calculadora
 # --------------------------------------------------------------------------------------------------------
 
 # ----------------------------------------METODOS TAD STACK-----------------------------------------------
@@ -259,51 +237,41 @@ multiplicar:
 # Saca dos numeros del stack y hace la potencia, el penultimo numero elevado al ultimo numero
 potencia:
     jal sacar
-    li $a0, 1
+    li $t0,1
+    beqz $v0,exponente_cero
+    bltz $v0,exponente_negativo
+
     loop_potencia:
-	    beqz $v0, fin_potencia
-	    mult $a0, $v1
-	    mflo $a0
-	    addi $v0, $v0, -1
-	    j loop_potencia
+    beqz $v0,fin_potencia
+    mult $v1,$t0
+    mflo $t0
+    addi $v0,$v0,-1
+    j loop_potencia
+
     fin_potencia:
-	    jal guardar
-	    j leer_nueva_entrada
-    potencia:
-        jal sacar
-        li $t0,1
-        beqz $v0,exponenteCero
-        bltz $v0,exponenteNegativo
+    la $a0,($t0)
 
-        loopPotencia:
-        beqz $v0,finPotencia
-        mult $v1,$t0
-        mflo $t0
-        addi $v0,$v0,-1
-        j loopPotencia
+    volver:
+    jal guardar
+    j leer_nueva_entrada
 
-        finPotencia:
-        la $a0,($t0)
-
-        volver:
-        jal guardar
-        j leer_nueva_entrada
-
-        exponenteCero:
-        li $a0,1
-        j volver
-
-# Resetea el puntero al stack al origen y el contador de elementos a 0
-limpiar_stack:
-    sb $0, cantidad
-    la $t1, stack
-    sw $t1, puntero
-    j loop_main_calculadora	
+    exponente_cero:
+    li $a0,1
+    j volver
+    
+    exponente_negativo:
+    # Al no realizar la operaci�n debo devolver los elementos que quit� del stack. Estos se encuentran en $v0(�ltimo) y $v1(pen�ltimo).
+      la $a0,($v1)
+      jal guardar
+      la $a0,($v0)
+      jal guardar
+      
+      # MOSTRAR EN PANTALLA QUE NO SE PUEDE REALIZAR LA OPERACION
+      j leer_nueva_entrada	
 
 fin:
     li $v0, 10
     syscall
-
 
 
 

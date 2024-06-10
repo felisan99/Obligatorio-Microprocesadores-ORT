@@ -3,8 +3,12 @@ input_rot: .space 100
 string_rot: .space 100
 .align 2
 puntero_string: .space 4
+.align 2
+puntero_input: .space 4
 
 .text
+.global main_rot13    
+   
 #	Leo el mensaje que se desea encriptar
 main_rot13:
     # Cuido el STACK
@@ -13,32 +17,35 @@ main_rot13:
     sw $s0, 4($sp)
     # ---------------
     loop_main_rot13:
-    la $s0, input_rot
-    la $t0, string_rot
-    sw $t0, puntero_string
-    loop_leer_nuevo_caracter:
-        # Leo una primera entrada en modo lectura normal
-        li $a0, 0
-        jal leer_teclado
-        jal esperar_debounce
-        beq $v0, 'd', procesar_entrada_rot13
-        beq $v0, 'a', fin_rot13
-        sb $v0, ($s0)
-        addi $s0, $s0, 1
+        la $s0, input_rot
+        la $t0, string_rot
+        sw $t0, puntero_string
+        loop_leer_nuevo_caracter:
+            # Leo una primera entrada en modo lectura normal
+            li $a0, 0
+            jal leer_teclado
+            jal esperar_debounce
+            beq $v0, 'd', procesar_entrada_rot13
+            beq $v0, 'a', fin_rot13
+            sb $v0, ($s0)
+            addi $s0, $s0, 1
 
-    # Leo otra vez, teniendo en cuenta el tiempo
-    loop_repetido:
-        li $a0, 1
-        jal leer_teclado
-        beq $v0, 'd', procesar_entrada_rot13
-        beq $v0, 'a', fin_rot13
-        lb $t1, -1($s0)
-        bne $v0, $t1, guardar_caracter
-        beq $v0, '-', loop_leer_mensaje 
+        # Leo otra vez, teniendo en cuenta el tiempo
+        # Si me ingresan un caracter igual al anterior lo guardo
+        # Si pasa el tiempo guardo un guion
+        # Si me ingresan un caracter distinto guardo un guion y el caracter nuevo
+        loop_repetido:
+            li $a0, 1
+            jal leer_teclado
+            beq $v0, 'd', procesar_entrada_rot13
+            beq $v0, 'a', fin_rot13
+            lb $t1, -1($s0)
+            bne $v0, $t1, guardar_caracter
+            beq $v0, '-', loop_leer_nuevo_caracter 
 
-        sb $v0, ($s0)
-        addi $s0, $s0, 1
-        j loop_repetido
+            sb $v0, ($s0)
+            addi $s0, $s0, 1
+            j loop_repetido
 
     guardar_caracter:
         li $t1, '-'
@@ -57,39 +64,49 @@ fin_rot13:
     # ---------------
     jr $ra
 
+# Pasa de una serie de caracteres separado por guiones (-) a un solo string que lo guarda en string_rot
+# Cuando termina llama a encriptar_rot13
+# Si se encuentra con un # elimina el último caracter que se ingreso en string_rot
+# Usa $t0 (puntero a donde se guarda la secuencia), $t1 (contador largo de la secuencia), $t2 (caracter actual)
+
 procesar_entrada_rot13:
-    la $t0, input_rot
     loop_procesar_entrada_rot13:
-        lb $t2, ($t0)
+        lb $t2, ($s0)
         beq $t2, 0, fin_procesar_entrada_rot13 #terminó la cadena
         beq $t2, '#', eliminar_ultimo_caracter
         li $t1, 0
-        lb $a0, ($t0)
-        loop_secuencia_intern:
+        lb $a0, ($s0)
+        loop_secuencia_interna:
             beq $t2,'-',fin_secuencia
             addi $t1, $t1, 1
-            addi $t0, $t0, 1
+            addi $s0, $s0, 1
         j loop_secuencia_interna
         fin_secuencia:
-            addi $t0,$t0,1
+            addi $s0,$s0,1
             move $a1, $t1
             jal procesar_caracter
             j loop_procesar_entrada_rot13
     fin_procesar_entrada_rot13:
         j encriptar_rot13
 
+# Elimina el último caracter ingresado en string_rot
+# Usa $t3 (puntero a string_rot)
     eliminar_ultimo_caracter:
-        lw $t3, puntero_string
+	la $t4, string_rot
+        la $t3, puntero_string
         addi $t3, $t3, -1
-        blt $t3 string_rot, fin_eliminar_ultimo_caracter
+        blt $t3, $t4, fin_eliminar_ultimo_caracter
         sb $0, ($t3)
         sw $t3, puntero_string
         fin_eliminar_ultimo_caracter:
             addi $t0, $t0, 1
             j loop_procesar_entrada_rot13
     
-    # Le paso en $a0 el numero del caracter y $a1 el contador
+# Le paso en $a0 el numero del caracter y en $a1 el numero de veces que se repite ese numero.
+# Guarda en string_rot el caracter correspondiente a la secuencia leida de input_rot
     procesar_caracter:
+        beq $a0, '0', familia_0
+        beq $a0, '1', familia_1
         beq $a0, '2', familia_2
         beq $a0, '3', familia_3
         beq $a0, '4', familia_4
@@ -98,6 +115,22 @@ procesar_entrada_rot13:
         beq $a0, '7', familia_7
         beq $a0, '8', familia_8
         beq $a0, '9', familia_9
+
+        familia_0:
+            blt $a1, 3, seguir_familia_0
+            jal normalizar_a_2
+            seguir_familia_0:
+            beq $a1, 1, caracter_0
+            beq $a1, 2, caracter_espacio
+
+        familia_1:
+            blt $a1, 5, seguir_familia_1
+            jal normalizar_a_4
+            seguir_familia_1:
+            beq $a1, 1, caracter_1
+            beq $a1, 2, caracter_coma
+            beq $a1, 3, caracter_punto
+            beq $a1, 4, caracter_exclamacion
 
         familia_2:
             blt $a1, 5, seguir_familia_2
@@ -110,7 +143,7 @@ procesar_entrada_rot13:
             beq $a1, 4, caracter_2
 
         familia_3:
-            blt $a1, 5, seguir_familia_
+            blt $a1, 5, seguir_familia_3
             jal normalizar_a_4
             seguir_familia_3:
             beq $a1, 1, caracter_d
@@ -173,22 +206,6 @@ procesar_entrada_rot13:
             beq $a1, 3, caracter_y
             beq $a1, 4, caracter_z
             beq $a1, 5, caracter_9
-
-        familia_1:
-            blt $a1, 5, seguir_familia_1
-            jal normalizar_a_4
-            seguir_familia_1:
-            beq $a1, 1, caracter_1
-            beq $a1, 2, caracter_coma
-            beq $a1, 3, caracter_punto
-            beq $a1, 4, caracter_exclamacion
-
-        familia_0:
-            blt $a1, 3, seguir_familia_0
-            jal normalizar_a_2
-            seguir_familia_0:
-            beq $a1, 1, caracter_0
-            beq $a1, 2, caracter_espacio
 
         caracter_a:
             lw $t0, puntero_string
@@ -414,6 +431,70 @@ procesar_entrada_rot13:
             sw $t0, puntero_string
             jr $ra
         
+        caracter_2:
+            lw $t0, puntero_string
+            li $t1, '2'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_3:
+            lw $t0, puntero_string
+            li $t1, '3'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_4:
+            lw $t0, puntero_string
+            li $t1, '4'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_5:
+            lw $t0, puntero_string
+            li $t1, '5'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_6:
+            lw $t0, puntero_string
+            li $t1, '6'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_7:
+            lw $t0, puntero_string
+            li $t1, '7'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
+        caracter_8:
+            lw $t0, puntero_string
+            li $t1, '8'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+
+        caracter_9:
+            lw $t0, puntero_string
+            li $t1, '9'
+            sb $t1, 0($t0)
+            addi $t0, $t0, 1
+            sw $t0, puntero_string
+            jr $ra
+        
         caracter_espacio:
             lw $t0, puntero_string
             li $t1, ' '
@@ -448,23 +529,21 @@ procesar_entrada_rot13:
 
 # Funcion normalizar, recibe en $a1 el contador y lo normaliza a 4 o 5 y devuelve en $v0 el valor normalizado
         normalizar_a_4:
-            blt $a1, 5, fin_normalizar
-            loop_norm_4:
-                addi $a1, $a1, -4
-                j normalizar_a_4
+            blt $a1, 5, fin_normalizar           
+            addi $a1, $a1, -4
+            j normalizar_a_4
         
         normalizar_a_5:
             blt $a1, 6, fin_normalizar
-            loop_norm_4:
-                addi $a1, $a1, -5
-                j normalizar_a_5
+            addi $a1, $a1, -5
+            j normalizar_a_5
 
         normalizar_a_2:
             blt $a1, 3, fin_normalizar
-            loop_norm_2:
-                addi $a1, $a1, -2
-                j normalizar_a_2
-        fin_normalizar:
+            addi $a1, $a1, -2
+            j normalizar_a_2
+        
+	fin_normalizar:
             move $v0, $a1
 
 # FUNCION ENCRIPTACION ROT13

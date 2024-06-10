@@ -6,8 +6,7 @@ seteo_Display:
     sw $ra, ($sp)
 
     jal seteo_pin_res
-
-    jal esperar_envio
+    
     # set_mux a el default en 63(3F)
     jal DC_comando
     li $t0, 0xA8        
@@ -82,17 +81,6 @@ seteo_Display:
     sb $t0, SPI1BUF
     jal esperar_envio
 
-    # set_osc_frec:
-
-    #li $t0, 0xD5        
-    #sb $t0, SPI1BUF
-    #jal esperar_envio
-
-
-    #li $t0, 0xF        
-    #sb $t0, SPI1BUF
-    #jal esperar_envio
-
     # enable_charge_pump:
 
     li $t0, 0x8D        
@@ -116,9 +104,24 @@ seteo_Display:
     sb $t0, SPI1BUF
     jal esperar_envio
 
+    # Seteo imagen
+    
+    jal DC_dato
+    li $t0, 0
+    la $t1, imagen_menu_calculadora
+    loop_imagen:
+        lb $t2, ($t1)
+        sb $t2, SPI1BUF
+        jal esperar_envio
+        addi $t1, $t1, 1
+        addi $t0, $t0, 1
+        bne $t0, 1023, loop_imagen
+
     lw $ra, ($sp)
     addiu $sp, $sp, 4
     jr $ra
+
+
 
 esperar_envio:
     lw $t0, SPI1STAT

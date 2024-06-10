@@ -13,8 +13,9 @@ puntero: .space 4
 .align 2
 cantidad: .space 1
 .align 2
-menu_fila .space 1
-menu_columna .space 1
+menu_fila: .space 1
+menu_columna: .space 1
+operacion: .space 1
 
 .text
 .global main
@@ -22,6 +23,7 @@ menu_columna .space 1
 .global input    
 .global cantidad
 .global puntero    
+.global operacion
 
 main:
     jal seteo_SPI
@@ -53,6 +55,7 @@ main:
         sb $t0, menu_columna
         j loop_menu
 
+    # Cuando apretan D (enter) se fija en que lugar fila, columna esta y llama a el main de la aplicacion correspondiente
     iniciar_aplicacion:
         lb $t0, menu_fila
         lb $t1, menu_columna
@@ -69,10 +72,10 @@ main:
             beq $t1, 1, inicio_extra
     
     inicio_calculadora:
-        jal loop_main_calculadora
+        jal main_calculadora
         j loop_menu
     inicio_rot13:
-        jal loop_main_rot13
+        jal main_rot13
         j loop_menu
     inicio_opcional:
     #    jal loop_main_opcional

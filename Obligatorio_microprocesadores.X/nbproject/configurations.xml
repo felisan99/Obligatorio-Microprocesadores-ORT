@@ -26,6 +26,7 @@
       <itemPath>ROT13.s</itemPath>
       <itemPath>calculadoraRPN.s</itemPath>
       <itemPath>utilidades.s</itemPath>
+      <itemPath>imagenes.s</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
