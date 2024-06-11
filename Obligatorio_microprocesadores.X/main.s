@@ -26,11 +26,35 @@ operacion: .space 1
 .global operacion
 
 main:
+    sb $0, menu_fila
+    sb $0, menu_columna
+    sb $0, operacion
+    sb $0, cantidad
     jal seteo_SPI
     jal seteo_Display
     jal seteo_teclado
     jal seteo_calculadora
     loop_menu:
+        la $a0,imagen_calculadora
+        jal cargar_imagen
+        jal esperar_debounce
+        jal esperar_debounce
+        jal esperar_debounce
+        jal esperar_debounce
+        la $a0,imagen_pen
+        jal cargar_imagen
+        jal esperar_debounce
+        jal esperar_debounce
+        jal esperar_debounce
+        jal esperar_debounce
+	la $a0,imagen_manya
+	jal cargar_imagen
+        jal esperar_debounce
+        jal esperar_debounce
+        jal esperar_debounce
+        jal esperar_debounce
+        j loop_menu
+        jal menu_segun_posicion
         li $a0, 0
         jal leer_teclado
         beq $v0, '2', cambio_fila
@@ -54,6 +78,49 @@ main:
         xori $t0, $t0, 1 
         sb $t0, menu_columna
         j loop_menu
+
+    menu_segun_posicion:
+        #CUIDO EL STACK
+        addiu $sp, $sp, -4
+        sw $ra, ($sp)
+        #----------------
+        lb $t0, menu_fila
+        lb $t1, menu_columna
+        andi $t0, $t0, 1
+        andi $t1, $t1, 1
+        beq $t0, 0, fila_1_imagen
+        beq $t0, 1, fila_2_imagen
+
+        fila_1_imagen:
+            beq $t1, 0, mostrar_calculadora
+            beq $t1, 1, mostrar_rot13
+        fila_2_imagen:
+            beq $t1, 0, mostrar_opcional
+            beq $t1, 1, mostrar_extra
+
+        mostrar_calculadora:
+            la $a0, imagen_calculadora
+            jal cargar_imagen
+            #DEVUELVO EL STACK
+            lw $ra, ($sp)
+            addiu $sp, $sp, 4
+            jr $ra
+        mostrar_rot13:
+            lw $ra, ($sp)
+            addiu $sp, $sp, 4
+            jr $ra
+        mostrar_opcional:
+            lw $ra, ($sp)
+            addiu $sp, $sp, 4
+            jr $ra
+        mostrar_extra:
+            la $a0, imagen_pen
+            jal cargar_imagen
+            #DEVUELVO EL STACK
+            lw $ra, ($sp)
+            addiu $sp, $sp, 4
+            jr $ra
+
 
     # Cuando apretan D (enter) se fija en que lugar fila, columna esta y llama a el main de la aplicacion correspondiente
     iniciar_aplicacion:

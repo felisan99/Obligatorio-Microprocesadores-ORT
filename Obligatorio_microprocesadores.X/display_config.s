@@ -1,4 +1,5 @@
 .global seteo_Display
+.global cargar_imagen
 .text
 seteo_Display:
     # Guardo el JAL
@@ -9,54 +10,55 @@ seteo_Display:
     
     # set_mux a el default en 63(3F)
     jal DC_comando
-    li $t0, 0xA8        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    
+    #li $t0, 0xA8        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
 
-    li $t0, 0x3F        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0x3F        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
     # set_display_offset a cero
 
-    li $t0, 0xD3        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0xD3        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
 
-    li $t0, 0x00        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0x00        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
     # set_display_start_line
 
-    li $t0, 0x40        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0x40        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
     # set_segment_map
 
-    li $t0, 0xA0        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0xA0        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
     # set_com_output
 
-    li $t0, 0xC0        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0xC0        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
     # set_com_config
 
-    li $t0, 0xDA        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0xDA        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
 
-    li $t0, 2        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 2        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
     # set_contrast:
 
@@ -71,15 +73,15 @@ seteo_Display:
 
     # display_off
 
-    li $t0, 0xA4        
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0xA4        
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
     # set_normal_display:
 
-    li $t0, 0xA6       
-    sb $t0, SPI1BUF
-    jal esperar_envio
+    #li $t0, 0xA6       
+    #sb $t0, SPI1BUF
+    #jal esperar_envio
 
     # enable_charge_pump:
 
@@ -98,29 +100,37 @@ seteo_Display:
     sb $t0, SPI1BUF
     jal esperar_envio
 
-    # display todo on
-
-    li $t0, 0xA5        
+    
+    
+    li $t0, 0x20
     sb $t0, SPI1BUF
     jal esperar_envio
-
-    # Seteo imagen
     
-    jal DC_dato
     li $t0, 0
-    la $t1, imagen_menu_calculadora
-    loop_imagen:
-        lb $t2, ($t1)
-        sb $t2, SPI1BUF
-        jal esperar_envio
-        addi $t1, $t1, 1
-        addi $t0, $t0, 1
-        bne $t0, 1023, loop_imagen
+    sb $t0, SPI1BUF
+    jal esperar_envio
 
     lw $ra, ($sp)
     addiu $sp, $sp, 4
     jr $ra
 
+# En $a0 le entrego el address a la imagen que quiero cargar    
+cargar_imagen:
+    #CUIDAR EL STACK
+    addi $sp, $sp, -4
+    sw $ra, ($sp)
+    jal DC_dato   
+    li $t9, 0
+    loop_imagen:
+        lb $t2, ($a0)
+        sb $t2, SPI1BUF
+        jal esperar_envio
+        addi $a0, $a0, 1
+        addi $t9, $t9, 1
+        bne $t9, 1024, loop_imagen
+    lw $ra, ($sp)
+    addiu $sp, $sp, 4
+    jr $ra
 
 
 esperar_envio:

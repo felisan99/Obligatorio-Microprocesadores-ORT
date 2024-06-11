@@ -11,6 +11,7 @@ seteo_calculadora:
     
     
 main_calculadora:
+    # Guardo el STACK
     addiu $sp, $sp, -12
     sw $ra, ($sp)
     sw $s1, 4($sp)
