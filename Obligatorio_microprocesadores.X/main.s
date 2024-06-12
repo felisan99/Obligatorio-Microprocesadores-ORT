@@ -35,28 +35,11 @@ main:
     jal seteo_teclado
     jal seteo_calculadora
     loop_menu:
-        la $a0,imagen_calculadora
-        jal cargar_imagen
-        jal esperar_debounce
-        jal esperar_debounce
-        jal esperar_debounce
-        jal esperar_debounce
-        la $a0,imagen_pen
-        jal cargar_imagen
-        jal esperar_debounce
-        jal esperar_debounce
-        jal esperar_debounce
-        jal esperar_debounce
-	la $a0,imagen_manya
-	jal cargar_imagen
-        jal esperar_debounce
-        jal esperar_debounce
-        jal esperar_debounce
-        jal esperar_debounce
-        j loop_menu
+        
         jal menu_segun_posicion
         li $a0, 0
         jal leer_teclado
+	jal esperar_debounce
         beq $v0, '2', cambio_fila
         beq $v0, '8', cambio_fila
         beq $v0, '4', cambio_columna
@@ -95,8 +78,8 @@ main:
             beq $t1, 0, mostrar_calculadora
             beq $t1, 1, mostrar_rot13
         fila_2_imagen:
-            beq $t1, 0, mostrar_opcional
-            beq $t1, 1, mostrar_extra
+            beq $t1, 0, mostrar_tono
+            beq $t1, 1, mostrar_opcional
 
         mostrar_calculadora:
             la $a0, imagen_calculadora
@@ -105,21 +88,31 @@ main:
             lw $ra, ($sp)
             addiu $sp, $sp, 4
             jr $ra
+            # ----------------
         mostrar_rot13:
-            lw $ra, ($sp)
-            addiu $sp, $sp, 4
-            jr $ra
-        mostrar_opcional:
-            lw $ra, ($sp)
-            addiu $sp, $sp, 4
-            jr $ra
-        mostrar_extra:
-            la $a0, imagen_pen
+            la $a0, imagen_rot
             jal cargar_imagen
-            #DEVUELVO EL STACK
+            # DEVUELVO EL STACK
             lw $ra, ($sp)
             addiu $sp, $sp, 4
             jr $ra
+            # ----------------
+        mostrar_opcional:
+            la $a0, imagen_opcional
+            jal cargar_imagen
+            # DEVUELVO EL STACK
+            lw $ra, ($sp)
+            addiu $sp, $sp, 4
+            jr $ra
+            # ----------------
+        mostrar_tono:
+            la $a0, imagen_tono
+            jal cargar_imagen
+            # DEVUELVO EL STACK
+            lw $ra, ($sp)
+            addiu $sp, $sp, 4
+            jr $ra
+            # ----------------
 
 
     # Cuando apretan D (enter) se fija en que lugar fila, columna esta y llama a el main de la aplicacion correspondiente

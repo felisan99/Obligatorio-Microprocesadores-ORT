@@ -25,10 +25,10 @@ leer_teclado:
     addiu $sp, $sp, -4
     sw $ra, ($sp)
     # ---------------
-	li $t1, 0 #========
+	li $t1, 0 
     leer_teclado_loop:
-		beq $t1, 100000, paso_el_tiempo #======
-		addi $t1, $t1, 1 #=======
+		beq $t1, 100000, paso_el_tiempo 
+		addi $t1, $t1, 1 
 
 		li $t0, 0x1
 		li $a0, 1

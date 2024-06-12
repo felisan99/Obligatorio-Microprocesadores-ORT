@@ -2,14 +2,54 @@
 .global cargar_imagen
 .text
 seteo_Display:
-    # Guardo el JAL
+    # GUARDO EL STACK
     addiu $sp, $sp, -4
     sw $ra, ($sp)
+    # ----------------
 
     jal seteo_pin_res
-    
-    # set_mux a el default en 63(3F)
     jal DC_comando
+
+    # set_contrast:
+    li $t0, 0x81        
+    sb $t0, SPI1BUF
+    jal esperar_envio
+
+    li $t0, 0x7F        
+    sb $t0, SPI1BUF
+    jal esperar_envio
+
+    # enable_charge_pump:  
+    li $t0, 0x8D        
+    sb $t0, SPI1BUF
+    jal esperar_envio
+
+    li $t0, 0x14        
+    sb $t0, SPI1BUF
+    jal esperar_envio
+
+    # display_power_on:
+    li $t0, 0xAF        
+    sb $t0, SPI1BUF
+    jal esperar_envio
+
+    # display address mode:
+    li $t0, 0x20
+    sb $t0, SPI1BUF
+    jal esperar_envio
+    
+    li $t0, 0
+    sb $t0, SPI1BUF
+    jal esperar_envio
+
+    # DEVUELVO EL STACK
+    lw $ra, ($sp)
+    addiu $sp, $sp, 4
+    jr $ra
+    # ----------------
+
+    # set_mux a el default en 63(3F)
+   
     
     #li $t0, 0xA8        
     #sb $t0, SPI1BUF
@@ -62,15 +102,6 @@ seteo_Display:
 
     # set_contrast:
 
-    li $t0, 0x81        
-    sb $t0, SPI1BUF
-    jal esperar_envio
-
-
-    li $t0, 0x7F        
-    sb $t0, SPI1BUF
-    jal esperar_envio
-
     # display_off
 
     #li $t0, 0xA4        
@@ -83,55 +114,29 @@ seteo_Display:
     #sb $t0, SPI1BUF
     #jal esperar_envio
 
-    # enable_charge_pump:
-
-    li $t0, 0x8D        
-    sb $t0, SPI1BUF
-    jal esperar_envio
-
-
-    li $t0, 0x14        
-    sb $t0, SPI1BUF
-    jal esperar_envio
-
-    # display_power_on:
-
-    li $t0, 0xAF        
-    sb $t0, SPI1BUF
-    jal esperar_envio
-
-    
-    
-    li $t0, 0x20
-    sb $t0, SPI1BUF
-    jal esperar_envio
-    
-    li $t0, 0
-    sb $t0, SPI1BUF
-    jal esperar_envio
-
-    lw $ra, ($sp)
-    addiu $sp, $sp, 4
-    jr $ra
 
 # En $a0 le entrego el address a la imagen que quiero cargar    
 cargar_imagen:
     #CUIDAR EL STACK
-    addi $sp, $sp, -4
+    addi $sp, $sp, -8
     sw $ra, ($sp)
+    sw $s0, 4($sp)
+    #----------------
     jal DC_dato   
-    li $t9, 0
+    li $s0, 0
     loop_imagen:
         lb $t2, ($a0)
         sb $t2, SPI1BUF
         jal esperar_envio
         addi $a0, $a0, 1
-        addi $t9, $t9, 1
-        bne $t9, 1024, loop_imagen
+        addi $s0, $s0, 1
+        bne $s0, 1024, loop_imagen
+    #DEVUELVO EL STACK
     lw $ra, ($sp)
-    addiu $sp, $sp, 4
+    lw $s0, 4($sp)
+    addiu $sp, $sp, 8
+    #----------------
     jr $ra
-
 
 esperar_envio:
     lw $t0, SPI1STAT
