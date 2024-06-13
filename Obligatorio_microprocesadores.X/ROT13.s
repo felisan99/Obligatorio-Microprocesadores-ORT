@@ -41,11 +41,16 @@ main_rot13:
             beq $v0, 'a', fin_rot13
             lb $t1, -1($s0)
             bne $v0, $t1, guardar_caracter
-            beq $v0, '-', loop_leer_nuevo_caracter 
-
+            beq $v0, '-', guardo_guion_y_nueva_entrada 
             sb $v0, ($s0)
             addi $s0, $s0, 1
             j loop_repetido
+
+    guardo_guion_y_nueva_entrada:
+        li $t1, '-'
+        sb $t1, ($s0)
+        addi $s0, $s0, 1
+        j loop_leer_nuevo_caracter
 
     guardar_caracter:
         li $t1, '-'
@@ -54,6 +59,8 @@ main_rot13:
         sb $v0, ($s0)
         addi $s0, $s0, 1
         j loop_repetido
+	
+	
 fin_rot13:
     # Limpiar el input y el string
 
@@ -72,7 +79,7 @@ fin_rot13:
 procesar_entrada_rot13:
     loop_procesar_entrada_rot13:
         lb $t2, ($s0)
-        beq $t2, 0, fin_procesar_entrada_rot13 #terminó la cadena
+        beq $t2, 0, fin_procesar_entrada_rot13 # terminó la cadena
         beq $t2, '#', eliminar_ultimo_caracter
         li $t1, 0
         lb $a0, ($s0)

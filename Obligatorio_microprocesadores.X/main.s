@@ -39,7 +39,7 @@ main:
         jal menu_segun_posicion
         li $a0, 0
         jal leer_teclado
-	jal esperar_debounce
+	    jal esperar_debounce
         beq $v0, '2', cambio_fila
         beq $v0, '8', cambio_fila
         beq $v0, '4', cambio_columna
@@ -128,7 +128,7 @@ main:
             beq $t1, 0, inicio_calculadora
             beq $t1, 1, inicio_rot13
         fila_2:
-            beq $t1, 0, inicio_opcional
+            beq $t1, 0, inicio_tono
             beq $t1, 1, inicio_extra
     
     inicio_calculadora:
@@ -137,8 +137,8 @@ main:
     inicio_rot13:
         jal main_rot13
         j loop_menu
-    inicio_opcional:
-    #    jal loop_main_opcional
+    inicio_tono:
+    #    jal loop_main_tono
         j loop_menu
     inicio_extra:
     #    jal loop_main_extra

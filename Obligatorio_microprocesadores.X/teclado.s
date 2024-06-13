@@ -22,44 +22,54 @@ seteo_teclado:
 
 leer_teclado:
     # Cuido el STACK
-    addiu $sp, $sp, -4
+    addiu $sp, $sp, -12
     sw $ra, ($sp)
+	sw $s0, 4($sp)
+	sw $s1, 8($sp)
+	sw $ra, 12($sp)
     # ---------------
-	li $t1, 0 
+	li $s1, 0
+	move $s0, $a0
     leer_teclado_loop:
-		beq $t1, 100000, paso_el_tiempo 
-		addi $t1, $t1, 1 
+		beq $s0, 1, modo_rot13
+		j modo_normal
+		modo_rot13:
+		beq $s1, 100000, paso_el_tiempo 
+		modo_normal:
+		addi $s1, $s1, 1 
 
-		li $t0, 0x1
+		li $s2, 0x1
 		li $a0, 1
-		sw $t0, PORTE
+		sw $s2, PORTE
 		jal columna_presionada
 		bne $v0, 0, se_registro_ingreso
 
-		li $t0, 0x2
+		li $s2, 0x2
 		li $a0, 2
-		sw $t0, PORTE
+		sw $s2, PORTE
 		jal columna_presionada
 		bne $v0, 0, se_registro_ingreso
 
-		li $t0, 0x4
+		li $s2, 0x4
 		li $a0, 3
-		sw $t0, PORTE
+		sw $s2, PORTE
 		jal columna_presionada
 		bne $v0, 0, se_registro_ingreso
 
-		li $t0, 0x8
+		li $s2, 0x8
 		li $a0, 4
-		sw $t0, PORTE
+		sw $s2, PORTE
 		jal columna_presionada
 		bne $v0, 0, se_registro_ingreso
-		
 		j leer_teclado_loop
     
     se_registro_ingreso:
 	# Cuido el STACK
 	lw $ra, ($sp)
-	addiu $sp, $sp, 4
+	lw $s0, 4($sp)
+	lw $s1, 8($sp)
+	lw $s2, 12($sp)
+	addiu $sp, $sp, 12
 	# ---------------
 	jr $ra
 

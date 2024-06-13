@@ -5,8 +5,10 @@
 seteo_calculadora:
     la $t0, stack
     sw $t0, puntero
-    lb $0, cantidad
-    lb $0, operacion
+    li $t0, 0
+    li $t1,1
+    sb $t0, cantidad
+    sb $t1, operacion
     jr $ra
     
     
@@ -17,21 +19,23 @@ main_calculadora:
     sw $s1, 4($sp)
     sw $s2, 8($sp)
     # ---------------
+    
     leer_nueva_entrada:
         li $s1, 0 # Largo actual de la entrada
         la $s2, input
         loop_leer_entrada:
             li $a0, 0
             jal leer_teclado
-            beq $v0, 'D', final_lectura_numero
+	    jal esperar_debounce
+            beq $v0, 'd', final_lectura_numero
             beq $v0, '#', eliminar_ultimo_numero
             beq $v0, '*', cambiar_operacion
+	    beq $v0, 'a', fin_calculadora
             # Guarda en input el nuevo numero
             sb $v0, ($s2)
             addi $s1, $s1, 1
             addi $s2, $s2, 1	    
             beq $s1, 4, final_lectura_numero
-            jal esperar_debounce
             j loop_leer_entrada
         final_lectura_numero:
             jal procesar_entrada
@@ -66,27 +70,34 @@ main_calculadora:
             j loop_leer_entrada
     
 # Evaluo si cambia de operacion, 0 -> no hay operacion, 1 -> suma, 2 -> resta, 3 -> multiplicacion, 4 -> potencia
-    cambiar_operacion:
-        la $t0, operacion
-        lb $t1, ($t0)
-        addi $t1, $t1, 1
-
-        beq $t1, 5, resetear_operacion
-        sb $t1, ($t0)
-
+    cambiar_operacion:    
         li $a0, 0
         jal leer_teclado
-        jal esperar_debounce
-        beq $v0, 'D', final_cambio_operacion
-        beq $v0, '*', cambiar_operacion
-        j entrada_invalida
-        resetear_operacion:
-            li $t2, -1
-            sb $t2, ($t0)
+	    jal esperar_debounce
+        beq $v0, 'd', final_cambio_operacion
+        beq $v0, '*', siguiente_operacion
+         j entrada_invalida
+
+        siguiente_operacion:
+	    la $t0, operacion
+	    lb $t1, ($t0)
+            addi $t1, $t1, 1
+            beq $t1, 5, resetear_operacion
+            sb $t1, ($t0)
             j cambiar_operacion
+        
+	    resetear_operacion:
+            li $t1, 0
+            sb $t1, ($t0)
+            j cambiar_operacion
+
         final_cambio_operacion:
             la $t0, operacion
             lb $t1, ($t0)
+	        # Limpio la operacion
+            li $t2, 1
+	        sb $t2, ($t0)
+	        # ------------
             beq $t1, 0, leer_nueva_entrada
             beq $t1, 1, sumar
             beq $t1, 2, restar
