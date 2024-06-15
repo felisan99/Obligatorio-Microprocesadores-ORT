@@ -19,7 +19,9 @@ main_calculadora:
     sw $s1, 4($sp)
     sw $s2, 8($sp)
     # ---------------
-    
+    la $a0, imagen_vacia
+    li $a1, 1024
+    jal cargar_imagen
     leer_nueva_entrada:
         li $s1, 0 # Largo actual de la entrada
         la $s2, input
@@ -160,6 +162,7 @@ guardar:
 	# la $a0, msj_exceso_operandos  ----------> FUNCION PANTALLA <-----------
 	# syscall
     fin_guardado:
+    jal imprimir_char
 	li $t0, 0
 	lw $t0, input
 	jr $ra

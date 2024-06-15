@@ -3,7 +3,7 @@
 # GND --> GND --> CS
 
 .data
-    .asciiz "test"
+test: .asciiz "test"
 .align 2
 stack: .space 44    # Espacio para 10 numeros de 32 bits
 .align 2
@@ -34,19 +34,18 @@ main:
     jal seteo_Display
     jal seteo_teclado
     jal seteo_calculadora
-    loop_menu:
-        
-        jal menu_segun_posicion
-        li $a0, 0
-        jal leer_teclado
-	    jal esperar_debounce
-        beq $v0, '2', cambio_fila
-        beq $v0, '8', cambio_fila
-        beq $v0, '4', cambio_columna
-        beq $v0, '6', cambio_columna
-        beq $v0, 'd', iniciar_aplicacion
-        # MOSTRAR ERROR DE NO INGRESO ALGO VALIDO
-        j loop_menu
+    loop_menu:    
+	jal menu_segun_posicion
+	li $a0, 0
+	jal leer_teclado
+	jal esperar_debounce
+	beq $v0, '2', cambio_fila
+	beq $v0, '8', cambio_fila
+	beq $v0, '4', cambio_columna
+	beq $v0, '6', cambio_columna
+	beq $v0, 'd', iniciar_aplicacion
+	# MOSTRAR ERROR DE NO INGRESO ALGO VALIDO
+	j loop_menu
     
     # Caso que ingresan 2 u 8 vas para arriba o para abajo que significa negar el primer bit de lugar_menu
     cambio_fila:
