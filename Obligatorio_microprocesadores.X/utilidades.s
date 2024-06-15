@@ -8,7 +8,7 @@ esperar_debounce:
     li $s0, 0
     loop_esperar_debounce:
 	addi $s0, $s0, 1
-        beq $s0, 30000, final_debounce
+        beq $s0, 40000, final_debounce
   	j loop_esperar_debounce
     final_debounce:
     # Devuelvo el s

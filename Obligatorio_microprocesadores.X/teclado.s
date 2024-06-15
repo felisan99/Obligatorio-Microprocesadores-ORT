@@ -26,7 +26,7 @@ leer_teclado:
     sw $ra, ($sp)
 	sw $s0, 4($sp)
 	sw $s1, 8($sp)
-	sw $ra, 12($sp)
+	sw $s2, 12($sp)
     # ---------------
 	li $s1, 0
 	move $s0, $a0

@@ -2,13 +2,17 @@
 # PUERTO G --> PIN 13 --> RES
 # GND --> GND --> CS
 
+.global main
+.global stack   
+.global cantidad
+.global puntero    
+.global operacion
+
 .data
 test: .asciiz "test"
 .align 2
 stack: .space 44    # Espacio para 10 numeros de 32 bits
-.align 2
-input: .space 4	    # Espacio para que usuario ingrese datos
-.align 2					
+.align 2	
 puntero: .space 4
 .align 2
 cantidad: .space 1
@@ -18,13 +22,6 @@ menu_columna: .space 1
 operacion: .space 1
 
 .text
-.global main
-.global stack
-.global input    
-.global cantidad
-.global puntero    
-.global operacion
-
 main:
     sb $0, menu_fila
     sb $0, menu_columna
