@@ -1,5 +1,3 @@
-
-.text
 .global seteo_Display
 .global cargar_imagen
 .global imprimir_char
@@ -7,7 +5,8 @@
 .global escribir_texto
 .global imprimir_numero  
 .global de_char_a_imagen  
-   
+.global imprimir_texto
+.text
 seteo_Display:
     # GUARDO EL STACK
     addiu $sp, $sp, -4
@@ -85,106 +84,52 @@ cargar_imagen:
     #----------------
     jr $ra
 
+# Imprime el mensaje que este en el address $a0, en el renglon que se envia en $a1 como address que tiene un numero x de caracteres dado en $a2
+imprimir_texto:
+    # CUIDO EL STACK
+    addiu $sp, $sp, -20
+    sw $ra, ($sp)
+    sw $s0, 4($sp)
+    sw $s1, 8($sp)
+    sw $s2, 12($sp)
+    sw $s3, 16($sp)
+    # ----------------
 
-# # En $a0 le entrego el numero que quiero que imprima
-#     imprimir_numero:
-#         # CUIDO EL STACK
-#         addiu $sp, $sp, -24
-#         sw $ra, ($sp)
-#         sw $s0, 4($sp)
-#         sw $s1, 8($sp)
-#         sw $s2, 12($sp)
-#         sw $s3, 16($sp)
-#         sw $s4, 20($sp)
-#         # ----------------
-# 	    jal DC_dato
-#         jal de_numero_a_imagen
-#         move $s4, $v0
-#         li $s0, 0 # posicion en la imagen actual 0-1024
-#         lb $s1, posicion_siguiente_char # posicion a la que quiero llegar para dibujar el char
-#         la $s2, imagen_actual # puntero a la imagen que esta cargada en el display
-#         li $s3, 0 # contador de cuantos bytes del char voy poniendo
-#         loop_ir_a_posicion:
-#             beq $s0, $s1, cargar_char
-#             addi $s2, $s2, 1
-# 	    addi $s0, $s0, 1
-#             j loop_ir_a_posicion
-#         cargar_char:
-#             beq $s3, 8, fin_cargar_char
-#             lb $t0, ($s4)
-#             sb $t0, ($s2)
-#             addi $s3, $s3, 1
-#             addi $s4, $s4, 1
-#             addi $s2, $s2, 1
-#             j cargar_char
-#         fin_cargar_char:
-#             addi $s1, $s1, 8
-#             blt $s1, 1024, guardar_nueva_posicion
-#             li $s1, 0
-#             guardar_nueva_posicion:
-#             sb $s1, (posicion_siguiente_char)
-#             la $a0, imagen_actual
-#             jal cargar_imagen
-#             # DEVUELVO EL STACK
-#             lw $ra, ($sp)
-#             lw $s0, 4($sp)
-#             lw $s1, 8($sp)
-#             lw $s2, 12($sp)
-#             lw $s3, 16($sp)
-#             lw $s4, 20($sp)
-#             addiu $sp, $sp, 24
-#             # ----------------
-#             jr $ra
-
-# # En $a0 le entrego el char que quiero que imprima
-#     imprimir_char:
-#         # CUIDO EL STACK
-#         addiu $sp, $sp, -24
-#         sw $ra, ($sp)
-#         sw $s0, 4($sp)
-#         sw $s1, 8($sp)
-#         sw $s2, 12($sp)
-#         sw $s3, 16($sp)
-#         sw $s4, 20($sp)
-#         # ----------------
-# 	    jal DC_dato
-#         jal de_char_a_imagen
-#         move $s4, $v0
-#         li $s0, 0 # contador hasta el lugar que tengo que llegar
-#         lb $s1, posicion_siguiente_char # posicion a la que quiero llegar para dibujar el char
-#         la $s2, imagen_actual # puntero a la imagen que esta cargada en el display
-#         li $s3, 0 # contador de cuantos bytes del char voy poniendo
-#         loop_ir_a_posicion_num:
-#             beq $s0, $s1, cargar_num
-#             addi $s2, $s2, 1
-#             j loop_ir_a_posicion_num
-#         cargar_num:
-#             beq $s3, 8, fin_cargar_num
-#             lb $t0, ($s4)
-#             sb $t0, ($s2)
-#             addi $s3, $s3, 1
-#             addi $s4, $s4, 1
-#             addi $s2, $s2, 1
-#             j cargar_num
-#         fin_cargar_num:
-#             addi $s1, $s1,8
-#             blt $s1, 1024, guardar_nueva_posicion
-#             li $s1, 0
-#             guardar_nueva_posicion_num:
-#             sb $s1, (posicion_siguiente_char)
-#             la $a0, imagen_actual
-#             jal cargar_imagen
-#             # DEVUELVO EL STACK
-#             lw $ra, ($sp)
-#             lw $s0, 4($sp)
-#             lw $s1, 8($sp)
-#             lw $s2, 12($sp)
-#             lw $s3, 16($sp)
-#             lw $s4, 20($sp)
-#             addiu $sp, $sp, 24
-#             # ----------------
-#             jr $ra
-
+    li $s2, 0 # contador de la cantidad de chars que voy cargando
+    lw $s0, ($a1)
+    move $s1, $a0
+    move $s3, $a2
+    loop_imprimir_letrero:
+        lb $a0, ($s1)
+        jal de_char_a_imagen
+        move $t2, $v0   # Ahora en $t2 tengo el address de memoria a la imagen del char que tengo que cargar
+        li $t1, 0
+        loop_cargar_char:
+            lb $t0, ($t2)   # Cargo el byte de la imagen
+            sb $t0, ($s0)   # La guardo en la imagen actual, el renglon 1
+            addi $t2, $t2, 1
+            addi $s0, $s0, 1
+            addi $t1, $t1, 1 # Llevo la cuenta de la cantidad de bytes que voy guardando, como es un caracter tienen que ser 8
+            beq $t1, 8, fin_cargar_char
+            j loop_cargar_char
+        fin_cargar_char:
+            addi $s1, $s1, 1 # Paso al siguiente char que tengo que cargar
+            addi $s2, $s2, 1 # Agrego uno a la cantidad de chars que voy cargando
+            beq $s2, $s3, fin_imprimir_letrero
+            j loop_imprimir_letrero
+    
+    fin_imprimir_letrero:
+        la $a0, imagen_actual_calculadora
+        jal cargar_imagen
+        # DEVUELVO EL STACK
+        lw $ra, ($sp)
+        lw $s0, 4($sp)
+        lw $s1, 8($sp)
+        lw $s2, 12($sp)
+        lw $s3, 16($sp)
+        addiu $sp, $sp, 20
+        # ---------------
+        jr $ra
 
 # Recibe en $a0 el char y devuelve en $v0 el address a la imagen del char
 de_char_a_imagen:
@@ -226,6 +171,8 @@ de_char_a_imagen:
     beq $a0, '9', cargar_9
     beq $a0, ' ', cargar_esp
     beq $a0, ':', cargar_dos_puntos
+    beq $a0, '|', cargar_separador
+    beq $a0, '-', cargar_menos
     cargar_a:
         la $v0, img_a
         jr $ra
@@ -337,8 +284,14 @@ de_char_a_imagen:
         la $v0, img_esp
         jr $ra
     cargar_dos_puntos:
-	la $v0, img_dos_puntos
-	jr $ra
+	    la $v0, img_dos_puntos
+	    jr $ra
+    cargar_separador:
+        la $v0, img_separador
+        jr $ra
+    cargar_menos:
+        la $v0, img_menos
+        jr $ra
 
 # Espera a que el display este listo para recibir un nuevo dato
 esperar_envio:
@@ -384,34 +337,6 @@ seteo_pin_res:
     sw $t0, PORTG
     jr $ra
 
-# # Recibe en a0 el texto que se quiere escribir, y en a1 la cantidad de caracteres que tiene el texto
-# escribir_texto:
-#     # CUIDO EL STACK
-#     addiu $sp, $sp, -16
-#     sw $ra, ($sp)
-#     sw $s0, 4($sp)
-#     sw $s1, 8($sp)
-#     sw $s2, 12($sp)
-#     # ----------------
-#     li $s0, 0
-#     move $s1, $a0
-#     move $s2, $a1
-#     loop_texto:
-#         lb $a0, ($s1)
-# 	# ACA TEBGO QUE VER PORQUE YO TENGO UN ASCII Y NECESITO EN REALIDAD MANDARLE LA IMAGEN QUE CORRESPONDE A EL ASCII ESE
-#         li $a1, 8
-#         jal imprimir_char
-#         addi $s1, $s1, 1
-#         addi $s0, $s0, 1
-#         bne $s0, $s2, loop_texto
-#     # DEVUELVO EL STACK
-#     lw $ra, ($sp)
-#     lw $s0, 4($sp)
-#     lw $s1, 8($sp)
-#     lw $s2, 12($sp)
-#     addiu $sp, $sp, 16
-#     # ----------------
-#     jr $ra
 
     
 

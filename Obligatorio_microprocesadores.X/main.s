@@ -3,19 +3,12 @@
 # GND --> GND --> CS
 
 .global main
-.global stack   
-.global cantidad
-.global puntero    
+.global stack      
 .global operacion
 
 .data
 test: .asciiz "test"
-.align 2
-stack: .space 44    # Espacio para 10 numeros de 32 bits
-.align 2	
-puntero: .space 4
-.align 2
-cantidad: .space 1
+
 .align 2
 menu_fila: .space 1
 menu_columna: .space 1
@@ -26,7 +19,7 @@ main:
     sb $0, menu_fila
     sb $0, menu_columna
     sb $0, operacion
-    sb $0, cantidad
+    
     jal seteo_SPI
     jal seteo_Display
     jal seteo_teclado

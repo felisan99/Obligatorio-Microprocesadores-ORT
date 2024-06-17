@@ -22,7 +22,7 @@ seteo_teclado:
 
 leer_teclado:
     # Cuido el STACK
-    addiu $sp, $sp, -12
+    addiu $sp, $sp, -16
     sw $ra, ($sp)
 	sw $s0, 4($sp)
 	sw $s1, 8($sp)
@@ -69,7 +69,7 @@ leer_teclado:
 	lw $s0, 4($sp)
 	lw $s1, 8($sp)
 	lw $s2, 12($sp)
-	addiu $sp, $sp, 12
+	addiu $sp, $sp, 16
 	# ---------------
 	jr $ra
 
