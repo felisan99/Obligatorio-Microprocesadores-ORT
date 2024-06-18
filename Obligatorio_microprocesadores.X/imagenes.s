@@ -55,6 +55,8 @@ img_exc: .byte 0, 0, 0, 95, 95, 0, 0, 0
 img_dos_puntos: .byte 0, 0, 102, 102, 0, 0, 0, 0
 img_separador: .byte 0, 0, 0, 126, 126, 0, 0, 0
 img_menos: .byte 8, 8, 8, 8, 8, 8, 8, 0
+img_mas: .byte 8, 8, 62, 62, 8, 8, 0, 0
+img_multiplicacion: .byte 8, 42, 62, 28, 28, 62, 42, 0
 
 .text
     .global imagen_calculadora
@@ -70,6 +72,8 @@ img_menos: .byte 8, 8, 8, 8, 8, 8, 8, 0
     .global img_dos_puntos
     .global img_separador
     .global img_menos
+    .global img_mas
+    .global img_multiplicacion
 
     .global img_0
     .global img_1

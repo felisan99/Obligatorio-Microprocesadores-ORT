@@ -5,9 +5,13 @@
 .align 2
 stack: .space 44    # Espacio para 10 numeros de 32 bits
 .align 2
-texto_stack: .space 200    # Espacio para 10 numeros de 32 bits
+texto_stack: .space 32   # Espacio para texto de 32 caracteres
 .align 2
-puntero_al_texto_stack: .space 4
+msg_suma: .asciiz "+"
+.align 2
+msg_resta: .asciiz "-"
+.align 2
+msg_multiplicacion: .asciiz "*"
 .align 2
 puntero_al_espacio_stack: .space 4
 .align 2
@@ -47,7 +51,6 @@ seteo_calculadora:
     li $t1, 1
     sb $t1, operacion
     la $t0, texto_stack
-    sw $t0, puntero_al_texto_stack
 
     la $t0, imagen_actual_calculadora
     
@@ -106,6 +109,8 @@ main_calculadora:
         li $s1, 0 # Largo actual de la entrada en input
         la $s2, input_de_numeros
         sw $0, ($s2) # Limpia el input de numeros
+        lw $a0, renglon_8_calcu
+        jal limpiar_renglon
         loop_leer_entrada:
             li $a0, 0
             jal leer_teclado
@@ -162,12 +167,26 @@ main_calculadora:
             addi $t0, $t0, -1
             sb $0, ($t0)
         fin_eliminar_ultimo_numero:
-            la $a0, renglon_8_calcu
+            lw $a0, renglon_8_calcu
             jal limpiar_renglon
+            addi $s2, $s2, -1
+            addi $s1, $s1, -1
+            la $a0, input_de_numeros
+            la $a1, renglon_8_calcu
+            move $a2,  $s1 # Paso como parametro la cantidad de numero que hay en el input
+            jal imprimir_texto
             j loop_leer_entrada
     
-# Evaluo si cambia de operacion, 0 -> no hay operacion, 1 -> suma, 2 -> resta, 3 -> multiplicacion, 4 -> potencia
-    cambiar_operacion:    
+# Evaluo si cambia de operacion, 0 -> no hay operacion, 1 -> suma, 2 -> resta, 3 -> multiplicacion
+    cambiar_operacion:
+        la $a0, input_de_numeros
+        jal largo_string
+        bne $v0, 0, entrada_invalida
+        
+        la $t0, operacion
+        lb $t1, ($t0)
+        jal mostrar_operacion
+        
         li $a0, 0
         jal leer_teclado
 	    jal esperar_debounce
@@ -176,15 +195,16 @@ main_calculadora:
          j entrada_invalida
 
         siguiente_operacion:
-	    la $t0, operacion
-	    lb $t1, ($t0)
+            la $t0, operacion
+            lb $t1, ($t0)
             addi $t1, $t1, 1
-            beq $t1, 5, resetear_operacion
+            beq $t1, 4, resetear_operacion
             sb $t1, ($t0)
+            jal mostrar_operacion
             j cambiar_operacion
         
 	    resetear_operacion:
-            li $t1, 0
+            li $t1, 1
             sb $t1, ($t0)
             j cambiar_operacion
 
@@ -199,7 +219,42 @@ main_calculadora:
             beq $t1, 1, sumar
             beq $t1, 2, restar
             beq $t1, 3, multiplicar
-            beq $t1, 4, potencia
+
+mostrar_operacion:
+    # CUIDO EL STACK
+    addiu $sp, $sp, -4
+    sw $ra, ($sp)
+    # ---------------
+    lb $t0, operacion
+    beq $t0, 1, mostrar_suma
+    beq $t0, 2, mostrar_resta
+    beq $t0, 3, mostrar_multiplicacion
+    j fin_mostrar_operacion
+    mostrar_suma:
+        la $a0, msg_suma
+        la $a1, renglon_8_calcu
+        li $a2, 1
+        jal imprimir_texto
+        j fin_mostrar_operacion
+    mostrar_resta:
+        la $a0, msg_resta
+        la $a1, renglon_8_calcu
+        li $a2, 1
+        jal imprimir_texto
+        j fin_mostrar_operacion
+    mostrar_multiplicacion:
+        la $a0, msg_multiplicacion
+        la $a1, renglon_8_calcu
+        li $a2, 1
+        jal imprimir_texto
+        j fin_mostrar_operacion
+    fin_mostrar_operacion:
+        # Devuelvo el stack
+        lw $ra, ($sp)
+        addiu $sp, $sp, 4
+        # ---------------
+        jr $ra
+
 
 # Imprime en consola todos los numeros del stack, recibe en $a0 la cantidad de numero que hay
 imprimir_input:
@@ -253,6 +308,10 @@ imprimir_input:
 
 # En $a0 el puntero al renglon que hay que limpiar 
 limpiar_renglon:
+    # Cuide el stack
+    addiu $sp, $sp, -4
+    sw $ra, ($sp)
+    # ---------------
     li $t0, 0
     loop_limpiar_renglon:
         sb $0, ($a0)
@@ -261,10 +320,26 @@ limpiar_renglon:
         beq $t0, 128, fin_limpiar_renglon
         j loop_limpiar_renglon
     fin_limpiar_renglon:
+        la $a0, imagen_actual_calculadora
+        jal cargar_imagen
+    # Devuelvo el stack
+    lw $ra, ($sp)
+    addiu $sp, $sp, 4
+    # ---------------
     jr $ra
 
 # Convierte a un string lo que esta en el stack
 stack_a_texto:
+    # Limpio el buffer de texto
+    la $t0, texto_stack
+    li $t1, 0
+    loop_limpiar_texto_stack:
+        sw $0, ($t0)
+        addi $t0, $t0, 4
+        addi $t1, $t1, 1
+        beq $t1, 4, fin_limpiar_texto_stack
+        j loop_limpiar_texto_stack
+    fin_limpiar_texto_stack:
 
     la $t1, texto_stack           # Carga la dirección del buffer de texto en $t1
     la $t6, stack                 # Carga la dirección del stack en $t6
@@ -274,7 +349,7 @@ stack_a_texto:
     loop_por_elemento_del_stack:
         lw $t5, ($t6)                 # Carga el siguiente número del stack
         move $t9, $t1                 # Guarda la posición inicial del buffer de texto actual
-
+        bltz $t5,numero_negativo      # Si el número es negativo, salta a la rutina correspondiente
     loop_stack_a_texto:
         divu $t5, $t5, 10         # Divide el número entre 10 (usar divu para asegurar unsigned)
         mfhi $t2                  # Guarda el residuo en $t2
@@ -286,6 +361,11 @@ stack_a_texto:
 
     dar_vuelta_orden:
         # Guarda en $1 la dirección del último carácter agregado
+        bne $t3, 0, continuar_dar_vuelta
+	    li $t3, '-'
+        sb $t3, ($t1)             # Si el número es 0, agrega un guión al buffer
+        addi $t1, $t1, 1          # Avanza al siguiente espacio en el buffer
+        continuar_dar_vuelta:
         addi $t0, $t1, -1         # Retrocede uno para apuntar al último carácter agregado
         # En $t9 está el comienzo de la cadena del elemento actual
         loop_dar_vuelta_orden:
@@ -297,6 +377,13 @@ stack_a_texto:
             addi $t0, $t0, -1     # Retrocede al char anterior desde el final
             bge $t9, $t0, fin_dar_vuelta  # Si los punteros se cruzan, termina
             j loop_dar_vuelta_orden       # De lo contrario, repite
+
+    numero_negativo:
+        nor $t5, $t5, $0          # Invierte todos los bits del número
+        addi $t5, $t5, 1          # Suma 1 al número invertido
+        li $t3, 1
+        j loop_stack_a_texto      # Repite el proceso de conversion 
+
 
     fin_dar_vuelta:
         li $t9, '|'               # Coloca '|' al principio de cada cadena de números
@@ -323,7 +410,7 @@ sacar:
     lb $t0, cantidad_numeros_stack		# En $t0 guardo la cantidad de elementos en el stack
     la $t1, puntero_al_espacio_stack
     lw $t1, ($t1)			# En $t1 guardo el puntero al primer espacio vacio
-    blt $t0, 2, operandos_insuficientes
+    blt $t0, 2, entrada_invalida
     addi $t0, $t0, -2
     sb $t0, cantidad_numeros_stack
     lw $v0, -4($t1)
@@ -349,16 +436,9 @@ guardar:
     sw $t1, puntero_al_espacio_stack
     j fin_guardado
     exceso_operandos:
-	# li $v0, 4
-	# la $a0, msj_exceso_operandos  ----------> FUNCION PANTALLA <-----------
-	# syscall 54
+        jal entrada_invalida
     fin_guardado:
-    jal stack_a_texto
-    la $a0, texto_stack
-    jal largo_string
-    move $a2, $v0
-    la $a1, renglon_4_calcu
-    jal imprimir_texto
+    jal update_stack_en_pantalla
     # DEVUELVO EL STACK
     lw $ra, ($sp)
     addiu $sp, $sp, 4
@@ -411,7 +491,26 @@ procesar_entrada:
 # --------------------------------------------------------------------------------------------------------
 
 
-
+update_stack_en_pantalla:
+    # Cuidar stack
+    addiu $sp, $sp, -4
+    sw $ra, ($sp)
+    # ---------------
+    # Primero limpio el renglon 4
+    lw $a0, renglon_4_calcu
+    jal limpiar_renglon
+    # Ahora vuelvo a imprimir el stack actualizado
+    jal stack_a_texto
+    la $a0, texto_stack
+    jal largo_string
+    move $a2, $v0
+    la $a1, renglon_4_calcu
+    jal imprimir_texto
+    # Devuelvo el stack
+    lw $ra, ($sp)
+    addiu $sp, $sp, 4
+    #---------------
+    jr $ra
 
 # Imprime en consola el error de entrada invalida
 entrada_invalida:
@@ -425,13 +524,6 @@ entrada_invalida:
     fin_delay_entrada_invalida:
     la $a0, imagen_actual_calculadora
     jal cargar_imagen
-    j leer_nueva_entrada
-
-# Imprime en consola el error de operandos insuficientes
-operandos_insuficientes:
-    li $v0, 4
-    #la $a0, msj_operandos_insuficientes
-    syscall
     j leer_nueva_entrada
 
 # Saca dos numeros del stack y los resta
@@ -456,31 +548,6 @@ multiplicar:
     mflo $a0
     jal guardar
     j leer_nueva_entrada
-
-# Saca dos numeros del stack y hace la potencia, el penultimo numero elevado al ultimo numero
-potencia:
-    jal sacar
-    li $t0,1
-    beqz $v0,exponente_cero
-    bltz $v0,exponente_negativo
-
-    loop_potencia:
-    beqz $v0,fin_potencia
-    mult $v1,$t0
-    mflo $t0
-    addi $v0,$v0,-1
-    j loop_potencia
-
-    fin_potencia:
-    la $a0,($t0)
-
-    volver:
-    jal guardar
-    j leer_nueva_entrada
-
-    exponente_cero:
-    li $a0,1
-    j volver
     
     exponente_negativo:
     # Al no realizar la operaci�n debo devolver los elementos que quit� del stack. Estos se encuentran en $v0(�ltimo) y $v1(pen�ltimo).
@@ -495,6 +562,3 @@ potencia:
 fin:
     li $v0, 10
     syscall
-
-
-

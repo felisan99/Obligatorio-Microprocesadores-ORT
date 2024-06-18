@@ -173,6 +173,8 @@ de_char_a_imagen:
     beq $a0, ':', cargar_dos_puntos
     beq $a0, '|', cargar_separador
     beq $a0, '-', cargar_menos
+    beq $a0, '+', cargar_mas
+    beq $a0, '*', cargar_multiplicacion
     cargar_a:
         la $v0, img_a
         jr $ra
@@ -292,6 +294,14 @@ de_char_a_imagen:
     cargar_menos:
         la $v0, img_menos
         jr $ra
+    cargar_mas:
+        la $v0, img_mas
+        jr $ra
+    cargar_multiplicacion:
+        la $v0, img_multiplicacion
+        jr $ra
+        
+
 
 # Espera a que el display este listo para recibir un nuevo dato
 esperar_envio:
