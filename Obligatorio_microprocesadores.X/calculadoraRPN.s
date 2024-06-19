@@ -91,18 +91,21 @@ main_calculadora:
     la $a0, titulo_calculadora
     la $a1, renglon_1_calcu
     li $a2, 15
+    la $a3, imagen_actual_calculadora
     jal imprimir_texto
     
     # imprimir stack: en el renglon 3
     la $a0, msg_stack
     la $a1, renglon_3_calcu
     li $a2, 6
+    la $a3, imagen_actual_calculadora
     jal imprimir_texto
     
     # imprimir entrada: en el renglon 6
     la $a0, msg_entrada
     la $a1, renglon_6_calcu
     li $a2, 8
+    la $a3, imagen_actual_calculadora
     jal imprimir_texto
 
     leer_nueva_entrada:
@@ -126,6 +129,7 @@ main_calculadora:
             la $a0, input_de_numeros
             la $a1, renglon_8_calcu
             move $a2,  $s1 # Paso como parametro la cantidad de numero que hay en el input
+            la $a3, imagen_actual_calculadora
             jal imprimir_texto
             beq $s1, 4, final_lectura_numero
             j loop_leer_entrada
@@ -174,6 +178,7 @@ main_calculadora:
             la $a0, input_de_numeros
             la $a1, renglon_8_calcu
             move $a2,  $s1 # Paso como parametro la cantidad de numero que hay en el input
+            la $a3, imagen_actual_calculadora
             jal imprimir_texto
             j loop_leer_entrada
     
@@ -234,18 +239,21 @@ mostrar_operacion:
         la $a0, msg_suma
         la $a1, renglon_8_calcu
         li $a2, 1
+        la $a3, imagen_actual_calculadora
         jal imprimir_texto
         j fin_mostrar_operacion
     mostrar_resta:
         la $a0, msg_resta
         la $a1, renglon_8_calcu
         li $a2, 1
+        la $a3, imagen_actual_calculadora
         jal imprimir_texto
         j fin_mostrar_operacion
     mostrar_multiplicacion:
         la $a0, msg_multiplicacion
         la $a1, renglon_8_calcu
         li $a2, 1
+        la $a3, imagen_actual_calculadora
         jal imprimir_texto
         j fin_mostrar_operacion
     fin_mostrar_operacion:
@@ -346,10 +354,12 @@ stack_a_texto:
     lb $t8, cantidad_numeros_stack# Carga la cantidad de números en el stack
     li $t7, 0                     # Inicializa el contador de elementos procesados a 0
     
+    #texto_stack 4 3 2 1 _ _ _ _
+    # stack -1234 7777 10 --> 4 -> 3 -> 2 -> 1
     loop_por_elemento_del_stack:
         lw $t5, ($t6)                 # Carga el siguiente número del stack
         move $t9, $t1                 # Guarda la posición inicial del buffer de texto actual
-        bltz $t5,numero_negativo      # Si el número es negativo, salta a la rutina correspondiente
+        bltz $t5, numero_negativo      # Si el número es negativo, salta a la rutina correspondiente
     loop_stack_a_texto:
         divu $t5, $t5, 10         # Divide el número entre 10 (usar divu para asegurar unsigned)
         mfhi $t2                  # Guarda el residuo en $t2
@@ -361,11 +371,6 @@ stack_a_texto:
 
     dar_vuelta_orden:
         # Guarda en $1 la dirección del último carácter agregado
-        bne $t3, 0, continuar_dar_vuelta
-	    li $t3, '-'
-        sb $t3, ($t1)             # Si el número es 0, agrega un guión al buffer
-        addi $t1, $t1, 1          # Avanza al siguiente espacio en el buffer
-        continuar_dar_vuelta:
         addi $t0, $t1, -1         # Retrocede uno para apuntar al último carácter agregado
         # En $t9 está el comienzo de la cadena del elemento actual
         loop_dar_vuelta_orden:
@@ -381,7 +386,10 @@ stack_a_texto:
     numero_negativo:
         nor $t5, $t5, $0          # Invierte todos los bits del número
         addi $t5, $t5, 1          # Suma 1 al número invertido
-        li $t3, 1
+        li $t3, '-'               # Coloca un guión al principio del número
+        sb $t3, ($t9)
+        addi $t9, $t9, 1          # Avanza al siguiente espacio en el buffer
+        addi $t1, $t1, 1            
         j loop_stack_a_texto      # Repite el proceso de conversion 
 
 
@@ -505,6 +513,7 @@ update_stack_en_pantalla:
     jal largo_string
     move $a2, $v0
     la $a1, renglon_4_calcu
+    la $a3, imagen_actual_calculadora
     jal imprimir_texto
     # Devuelvo el stack
     lw $ra, ($sp)

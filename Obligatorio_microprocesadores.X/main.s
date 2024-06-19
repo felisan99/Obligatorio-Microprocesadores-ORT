@@ -127,7 +127,7 @@ main:
         jal main_rot13
         j loop_menu
     inicio_tono:
-    #    jal loop_main_tono
+        jal main_tono
         j loop_menu
     inicio_extra:
     #    jal loop_main_extra

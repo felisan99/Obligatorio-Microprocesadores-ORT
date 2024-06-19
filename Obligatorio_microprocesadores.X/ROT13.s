@@ -1,5 +1,8 @@
 .global main_rot13   
 .data
+.align 2
+string_anterior: .space 100
+.align 2
 imagen_actual_rot: .byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 .align 2
 input_rot: .space 100
@@ -9,6 +12,14 @@ string_rot: .space 100
 puntero_string: .space 4
 .align 2
 puntero_input: .space 4
+.align 2
+msg_entrada_rot: .asciiz "entrada:"
+.align 2
+msg_salida_rot: .asciiz "salida:"
+.align 2
+msg_titulo_rot: .asciiz "rot13"
+.align 2
+untero_input: .space 4
 .align 2
 renglon_1_rot: .word 0
 renglon_2_rot: .word 0
@@ -27,12 +38,20 @@ main_rot13:
     sw $ra, ($sp)
     sw $s0, 4($sp)
     # ---------------
+    # Limpio la pantalla
+    la $a0, imagen_actual_rot
+    jal cargar_imagen
+    #------------
+
+    # Cargo las direcciones de memoria de los renglones
     la $t0, imagen_actual_rot
     sw $t0, renglon_1_rot
-
+    
+    la $t1, renglon_1_rot
+    
     addi $t0, $t0, 128
     sw $t0, renglon_2_rot
-
+    
     addi $t0, $t0, 128
     sw $t0, renglon_3_rot
 
@@ -50,6 +69,28 @@ main_rot13:
 
     addi $t0, $t0, 128
     sw $t0, renglon_8_rot
+    # ---------------
+
+    # Cargo el titulo
+    la $a0, msg_titulo_rot
+    la $a1, renglon_1_rot
+    li $a2, 5
+    la $a3, imagen_actual_rot
+    jal imprimir_texto
+
+    # Cargo el texto de la entrada
+    la $a0, msg_entrada_rot
+    la $a1, renglon_2_rot
+    li $a2, 8
+    la $a3, imagen_actual_rot
+    jal imprimir_texto
+
+    # Cargo el texto de la entrada
+    la $a0, msg_salida_rot
+    la $a1, renglon_5_rot
+    li $a2, 7
+    la $a3, imagen_actual_rot
+    jal imprimir_texto
 
     loop_main_rot13:
         la $s0, input_rot
@@ -60,15 +101,12 @@ main_rot13:
             li $a0, 0
             jal leer_teclado
             jal esperar_debounce
-            beq $v0, 'd', procesar_entrada_rot13
+            beq $v0, 'd', encriptar_rot13
             beq $v0, 'a', fin_rot13
             sb $v0, ($s0)
+            jal procesar_entrada_rot13
+            jal imprimir_string_rot
             addi $s0, $s0, 1
-            # Imprimo en pantalla el caracter que acaban de poner
-            la $a0, input_rot
-            jal largo_string
-            move $a1, $v0
-            jal imprimir_texto
 
         # Leo otra vez, teniendo en cuenta el tiempo
         # Si me ingresan un caracter igual al anterior lo guardo
@@ -77,19 +115,24 @@ main_rot13:
         loop_repetido:
             li $a0, 1
             jal leer_teclado
-            beq $v0, 'd', procesar_entrada_rot13
+	    jal esperar_debounce
+            beq $v0, 'd', encriptar_rot13
             beq $v0, 'a', fin_rot13
             lb $t1, -1($s0)
             bne $v0, $t1, guardar_caracter
             beq $v0, '-', guardo_guion_y_nueva_entrada 
             sb $v0, ($s0)
             addi $s0, $s0, 1
+            jal procesar_entrada_rot13
+            jal imprimir_string_rot
             j loop_repetido
 
     guardo_guion_y_nueva_entrada:
         li $t1, '-'
         sb $t1, ($s0)
         addi $s0, $s0, 1
+        jal procesar_entrada_rot13
+        jal imprimir_string_rot
         j loop_leer_nuevo_caracter
 
     guardar_caracter:
@@ -98,8 +141,9 @@ main_rot13:
         addi $s0, $s0, 1
         sb $v0, ($s0)
         addi $s0, $s0, 1
+        jal procesar_entrada_rot13
+        jal imprimir_string_rot
         j loop_repetido
-	
 	
 fin_rot13:
     # Limpiar el input y el string
@@ -111,35 +155,43 @@ fin_rot13:
     # ---------------
     jr $ra
 
-# Pasa de una serie de caracteres separado por guiones (-) a un solo string que lo guarda en string_rot
-# Cuando termina llama a encriptar_rot13
-# Si se encuentra con un # elimina el último caracter que se ingreso en string_rot
-# Usa $t0 (puntero a donde se guarda la secuencia), $t1 (contador largo de la secuencia), $t2 (caracter actual)
-
+# -------------------------------------------------------------------------------
 procesar_entrada_rot13:
+    # Cuido el STACK
+    addiu $sp, $sp, -12
+    sw $ra, ($sp)
+    sw $s0, 4($sp)
+    sw $s2, 8($sp)
+    # ---------------
+    la $s0, input_rot
     loop_procesar_entrada_rot13:
-        lb $t2, ($s0)
-        beq $t2, 0, fin_procesar_entrada_rot13 # terminó la cadena
-        beq $t2, '#', eliminar_ultimo_caracter
-        li $t1, 0
+        lb $s2, ($s0)
+        beq $s2, 0, fin_procesar_entrada_rot13 # terminó la cadena
+        beq $s2, '#', eliminar_ultimo_caracter
+        li $t1, 0 # contador de apariciones de el mismo caracter en la secuencia
         lb $a0, ($s0)
+        # Itera hasta encontrar '-' y cuenta en $t1 cuntas veces aparecio el caracter
         loop_secuencia_interna:
-            beq $t2,'-',fin_secuencia
+            beq $s2,'-',fin_secuencia
+	    beq $s2, 0, fin_total_secuencia
             addi $t1, $t1, 1
             addi $s0, $s0, 1
+	    lb $s2, ($s0)
         j loop_secuencia_interna
         fin_secuencia:
             addi $s0,$s0,1
+	    fin_total_secuencia:
             move $a1, $t1
+	    beq $a0, '-', loop_procesar_entrada_rot13
             jal procesar_caracter
+            move $a0, $v0
+            jal agregar_a_string_rot
             j loop_procesar_entrada_rot13
-    fin_procesar_entrada_rot13:
-        j encriptar_rot13
-
-# Elimina el último caracter ingresado en string_rot
-# Usa $t3 (puntero a string_rot)
+    
+    # Elimina el último caracter ingresado en string_rot
+    # Usa $t3 (puntero a string_rot)
     eliminar_ultimo_caracter:
-	la $t4, string_rot
+        la $t4, string_rot
         la $t3, puntero_string
         addi $t3, $t3, -1
         blt $t3, $t4, fin_eliminar_ultimo_caracter
@@ -148,10 +200,106 @@ procesar_entrada_rot13:
         fin_eliminar_ultimo_caracter:
             addi $t0, $t0, 1
             j loop_procesar_entrada_rot13
-    
+
+    fin_procesar_entrada_rot13:
+        # Devuelvo el STACK
+        lw $ra, ($sp)
+        lw $s0, 4($sp)
+        lw $s2, 8($sp)
+        addiu $sp, $sp, 12
+        # ---------------
+        jr $ra
+# -------------------------------------------------------------------------------
+
+imprimir_string_rot:
+    # Cuido el STACK
+    addiu $sp, $sp, -4
+    sw $ra, ($sp)
+    # ---------------
+    # Limpio el renglon 3
+    lw $a0, renglon_3_rot
+    jal limpiar_renglon
+    #----------
+    la $a0, string_rot
+    la $a1, renglon_3_rot
+    jal largo_string
+    move $a2, $v0
+    la $a3, imagen_actual_rot
+    jal imprimir_texto
+    # Limpio la memoria de string_rot
+    jal copiar_a_anterior
+    jal limpiar_string
+    #----------
+    # Devuelvo el STACK
+    lw $ra, ($sp)
+    addiu $sp, $sp, 4
+    # ---------------
+    jr $ra
+
+copiar_a_anterior:
+    la $t0, string_rot
+    la $t1, string_anterior
+    loop_copiar_a_anterior:
+        lb $t2, ($t0)
+        beq $t2, 0, fin_copiar_a_anterior
+        sb $t2, ($t1)
+        addi $t0, $t0, 1
+        addi $t1, $t1, 1
+        j loop_copiar_a_anterior
+    fin_copiar_a_anterior:
+        jr $ra
+
+
+# En $a0 el puntero al renglon que hay que limpiar 
+limpiar_renglon:
+    # Cuide el stack
+    addiu $sp, $sp, -4
+    sw $ra, ($sp)
+    # ---------------
+    li $t0, 0
+    loop_limpiar_renglon:
+        sb $0, ($a0)
+        addi $a0, $a0, 1
+        addi $t0, $t0, 1
+        beq $t0, 128, fin_limpiar_renglon
+        j loop_limpiar_renglon
+    fin_limpiar_renglon:
+        la $a0, imagen_actual_rot
+        jal cargar_imagen
+    # Devuelvo el stack
+    lw $ra, ($sp)
+    addiu $sp, $sp, 4
+    # ---------------
+    jr $ra
+
+agregar_a_string_rot:
+    lw $t0, puntero_string
+    sb $a0, ($t0)
+    addi $t0, $t0, 1
+    sw $t0, puntero_string
+    jr $ra
+
+limpiar_string:
+    la $t0, string_rot
+    loop_limpiar_string:
+        lb $t1, ($t0)
+        beq $t1, 0, fin_limpiar_string
+        sb $0, ($t0)
+        addi $t0, $t0, 1
+        j loop_limpiar_string
+    fin_limpiar_string:
+        la $t0, string_rot
+        sw $t0, puntero_string
+        jr $ra
+
+
 # Le paso en $a0 el numero del caracter y en $a1 el numero de veces que se repite ese numero.
 # Guarda en string_rot el caracter correspondiente a la secuencia leida de input_rot
     procesar_caracter:
+        # Cuido el STACK
+        addiu $sp, $sp, -4
+        sw $ra, ($sp)
+        # ---------------
         beq $a0, '0', familia_0
         beq $a0, '1', familia_1
         beq $a0, '2', familia_2
@@ -166,6 +314,7 @@ procesar_entrada_rot13:
         familia_0:
             blt $a1, 3, seguir_familia_0
             jal normalizar_a_2
+            move $a1, $v0
             seguir_familia_0:
             beq $a1, 1, caracter_0
             beq $a1, 2, caracter_espacio
@@ -173,6 +322,7 @@ procesar_entrada_rot13:
         familia_1:
             blt $a1, 5, seguir_familia_1
             jal normalizar_a_4
+            move $a1, $v0
             seguir_familia_1:
             beq $a1, 1, caracter_1
             beq $a1, 2, caracter_coma
@@ -183,6 +333,7 @@ procesar_entrada_rot13:
             blt $a1, 5, seguir_familia_2
             jal normalizar_a_4
             move $a1, $v0
+            move $a1, $v0
             seguir_familia_2:
             beq $a1, 1, caracter_a
             beq $a1, 2, caracter_b
@@ -192,6 +343,7 @@ procesar_entrada_rot13:
         familia_3:
             blt $a1, 5, seguir_familia_3
             jal normalizar_a_4
+            move $a1, $v0
             seguir_familia_3:
             beq $a1, 1, caracter_d
             beq $a1, 2, caracter_e
@@ -201,6 +353,7 @@ procesar_entrada_rot13:
         familia_4:
             blt $a1, 5, seguir_familia_4
             jal normalizar_a_4
+            move $a1, $v0
             seguir_familia_4:
             beq $a1, 1, caracter_g
             beq $a1, 2, caracter_h
@@ -210,6 +363,7 @@ procesar_entrada_rot13:
         familia_5:
             blt $a1, 5, seguir_familia_5
             jal normalizar_a_4
+            move $a1, $v0
             seguir_familia_5:
             beq $a1, 1, caracter_j
             beq $a1, 2, caracter_k
@@ -219,6 +373,7 @@ procesar_entrada_rot13:
         familia_6:
             blt $a1, 5, seguir_familia_6
             jal normalizar_a_4
+            move $a1, $v0
             seguir_familia_6:
             beq $a1, 1, caracter_m
             beq $a1, 2, caracter_n
@@ -228,6 +383,7 @@ procesar_entrada_rot13:
         familia_7:
             blt $a1, 6, seguir_familia_7
             jal normalizar_a_5
+            move $a1, $v0
             seguir_familia_7:
             beq $a1, 1, caracter_p
             beq $a1, 2, caracter_q
@@ -238,6 +394,7 @@ procesar_entrada_rot13:
         familia_8:
             blt $a1, 5, seguir_familia_8
             jal normalizar_a_4
+            move $a1, $v0
             seguir_familia_8:
             beq $a1, 1, caracter_t
             beq $a1, 2, caracter_u
@@ -247,6 +404,7 @@ procesar_entrada_rot13:
         familia_9:
             blt $a1, 6, seguir_familia_9
             jal normalizar_a_5
+            move $a1, $v0
             seguir_familia_9:
             beq $a1, 1, caracter_w
             beq $a1, 2, caracter_x
@@ -255,323 +413,170 @@ procesar_entrada_rot13:
             beq $a1, 5, caracter_9
 
         caracter_a:
-            lw $t0, puntero_string
-            li $t1, 'a'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
-
+            li $v0, 'a'
+            j fin_procesar_caracter
+        
         caracter_b:
-            lw $t0, puntero_string
-            li $t1, 'b'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
-
+            li $v0, 'b'
+            j fin_procesar_caracter
+        
         caracter_c:
-            lw $t0, puntero_string
-            li $t1, 'c'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
-
+            li $v0, 'c'
+            j fin_procesar_caracter
+        
         caracter_d:
-            lw $t0, puntero_string
-            li $t1, 'd'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'd'
+            j fin_procesar_caracter
 
         caracter_e:
-            lw $t0, puntero_string
-            li $t1, 'e'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
-
+            li $v0, 'e'
+            j fin_procesar_caracter
+        
         caracter_f:
-            lw $t0, puntero_string
-            li $t1, 'f'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'f'
+            j fin_procesar_caracter
 
         caracter_g:
-            lw $t0, puntero_string
-            li $t1, 'g'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'g'
+            j fin_procesar_caracter
 
         caracter_h:
-            lw $t0, puntero_string
-            li $t1, 'h'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'h'
+            j fin_procesar_caracter
 
         caracter_i:
-            lw $t0, puntero_string
-            li $t1, 'i'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'i'
+            j fin_procesar_caracter
 
         caracter_j:
-            lw $t0, puntero_string
-            li $t1, 'j'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'j'
+            j fin_procesar_caracter
 
         caracter_k:
-            lw $t0, puntero_string
-            li $t1, 'k'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'k'
+            j fin_procesar_caracter
 
         caracter_l:
-            lw $t0, puntero_string
-            li $t1, 'l'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'l'
+            j fin_procesar_caracter
 
         caracter_m:
-            lw $t0, puntero_string
-            li $t1, 'm'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'm'
+            j fin_procesar_caracter
 
         caracter_n:
-            lw $t0, puntero_string
-            li $t1, 'n'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'n'
+            j fin_procesar_caracter
 
         caracter_o:
-            lw $t0, puntero_string
-            li $t1, 'o'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'o'
+            j fin_procesar_caracter
 
         caracter_p:
-            lw $t0, puntero_string
-            li $t1, 'p'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'p'
+            j fin_procesar_caracter
 
         caracter_q:
-            lw $t0, puntero_string
-            li $t1, 'q'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'q'
+            j fin_procesar_caracter
 
         caracter_r:
-            lw $t0, puntero_string
-            li $t1, 'r'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'r'
+            j fin_procesar_caracter
 
         caracter_s:
-            lw $t0, puntero_string
-            li $t1, 's'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 's'
+            j fin_procesar_caracter
 
         caracter_t:
-            lw $t0, puntero_string
-            li $t1, 't'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 't'
+            j fin_procesar_caracter
 
         caracter_u:
-            lw $t0, puntero_string
-            li $t1, 'u'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'u'
+            j fin_procesar_caracter
 
         caracter_v:
-            lw $t0, puntero_string
-            li $t1, 'v'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'v'
+            j fin_procesar_caracter
 
         caracter_w:
-            lw $t0, puntero_string
-            li $t1, 'w'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'w'
+            j fin_procesar_caracter
 
         caracter_x:
-            lw $t0, puntero_string
-            li $t1, 'x'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'x'
+            j fin_procesar_caracter  
 
         caracter_y:
-            lw $t0, puntero_string
-            li $t1, 'y'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
-
+            li $v0, 'y'
+            j fin_procesar_caracter
+        
         caracter_z:
-            lw $t0, puntero_string
-            li $t1, 'z'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, 'z'
+            j fin_procesar_caracter
 
         caracter_0:
-            lw $t0, puntero_string
             li $t1, '0'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            j fin_procesar_caracter
         
         caracter_1:
-            lw $t0, puntero_string
-            li $t1, '1'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, '1'
+            j fin_procesar_caracter
         
         caracter_2:
-            lw $t0, puntero_string
-            li $t1, '2'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, '2'
+            j fin_procesar_caracter
         
         caracter_3:
-            lw $t0, puntero_string
             li $t1, '3'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            j fin_procesar_caracter
         
         caracter_4:
-            lw $t0, puntero_string
-            li $t1, '4'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, '4'
+            j fin_procesar_caracter
         
         caracter_5:
-            lw $t0, puntero_string
-            li $t1, '5'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, '5'
+            j fin_procesar_caracter
         
         caracter_6:
-            lw $t0, puntero_string
-            li $t1, '6'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, '6'
+            j fin_procesar_caracter
         
         caracter_7:
-            lw $t0, puntero_string
-            li $t1, '7'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, '7'
+            j fin_procesar_caracter
         
         caracter_8:
-            lw $t0, puntero_string
-            li $t1, '8'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, '8'
+            j fin_procesar_caracter
 
         caracter_9:
-            lw $t0, puntero_string
-            li $t1, '9'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, '9'
+            j fin_procesar_caracter
         
         caracter_espacio:
-            lw $t0, puntero_string
-            li $t1, ' '
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, ' '
+            j fin_procesar_caracter
         
-        caracter_coma:
-            lw $t0, puntero_string
-            li $t1, ','
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+        caracter_coma:            
+            li $v0, ','
+            j fin_procesar_caracter
         
         caracter_punto: 
-            lw $t0, puntero_string
-            li $t1, '.'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
-            jr $ra
+            li $v0, '.'
+            j fin_procesar_caracter
         
         caracter_exclamacion:
-            lw $t0, puntero_string
-            li $t1, '!'
-            sb $t1, 0($t0)
-            addi $t0, $t0, 1
-            sw $t0, puntero_string
+            li $v0, '!'
+            j fin_procesar_caracter
+
+        fin_procesar_caracter:
+            # Devuelvo el STACK
+            lw $ra, ($sp)
+            addiu $sp, $sp, 4
+            # ---------------
             jr $ra
 
 # Funcion normalizar, recibe en $a1 el contador y lo normaliza a 4 o 5 y devuelve en $v0 el valor normalizado
@@ -592,11 +597,12 @@ procesar_entrada_rot13:
         
 	fin_normalizar:
             move $v0, $a1
+            jr $ra
 
 # FUNCION ENCRIPTACION ROT13
 
 encriptar_rot13:
-    la $t0, string_rot  # Cargar la dirección del String en $t0
+    la $t0, string_anterior  # Cargar la dirección del String en $t0
     loop_encriptar:
         lb $t1, ($t0)       # Cargar un byte del String en $t1
     
@@ -622,23 +628,36 @@ encriptar_rot13:
         j proximo
 
 fin:
-    # 1 cargar el mensaje en el buffer para mostrar en pantalla
-    
-    # 2 limpiar input y string
+    # Cargo el texto codificado en el renglon 8
+    la $a0, string_anterior
+    la $a1, renglon_8_rot
+    jal largo_string
+    move $a2, $v0
+    la $a3, imagen_actual_rot
+    jal imprimir_texto
+    #-------------------
+    # Limpio el input
     la $t0, input_rot
     li $t1, 0
     loop_limpiar_input:
         sb $0, ($t0)
         addi $t0, $t0, 1
-        bne $t1, 99, loop_limpiar_input
-    
-    la $t0, string_rot
-    li $t1, 0
-    loop_limpiar_string:
+        lb $t2, ($t0)
+        bne $t2, 0, loop_limpiar_input
+    #-------------------
+
+    # Limpio el string
+    jal limpiar_string
+    #-------------------
+
+    # Limpio el string anterior
+    la $t0, string_anterior
+    loop_limpiar_string_anterior:
         sb $0, ($t0)
         addi $t0, $t0, 1
-        bne $t1, 99, loop_limpiar_string
-    # 3 volver al loop_main_rot13
+        lb $t2, ($t0)
+        bne $t2, 0, loop_limpiar_string_anterior
+    #-------------------
     j loop_main_rot13
 
 

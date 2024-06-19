@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main.s teclado.s config.c spi_config.s display_config.s ROT13.s calculadoraRPN.s utilidades.s imagenes.s
+SOURCEFILES_QUOTED_IF_SPACED=main.s teclado.s config.c spi_config.s display_config.s ROT13.s calculadoraRPN.s utilidades.s imagenes.s tonos.s
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/teclado.o ${OBJECTDIR}/config.o ${OBJECTDIR}/spi_config.o ${OBJECTDIR}/display_config.o ${OBJECTDIR}/ROT13.o ${OBJECTDIR}/calculadoraRPN.o ${OBJECTDIR}/utilidades.o ${OBJECTDIR}/imagenes.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/teclado.o.d ${OBJECTDIR}/config.o.d ${OBJECTDIR}/spi_config.o.d ${OBJECTDIR}/display_config.o.d ${OBJECTDIR}/ROT13.o.d ${OBJECTDIR}/calculadoraRPN.o.d ${OBJECTDIR}/utilidades.o.d ${OBJECTDIR}/imagenes.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/teclado.o ${OBJECTDIR}/config.o ${OBJECTDIR}/spi_config.o ${OBJECTDIR}/display_config.o ${OBJECTDIR}/ROT13.o ${OBJECTDIR}/calculadoraRPN.o ${OBJECTDIR}/utilidades.o ${OBJECTDIR}/imagenes.o ${OBJECTDIR}/tonos.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/teclado.o.d ${OBJECTDIR}/config.o.d ${OBJECTDIR}/spi_config.o.d ${OBJECTDIR}/display_config.o.d ${OBJECTDIR}/ROT13.o.d ${OBJECTDIR}/calculadoraRPN.o.d ${OBJECTDIR}/utilidades.o.d ${OBJECTDIR}/imagenes.o.d ${OBJECTDIR}/tonos.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/teclado.o ${OBJECTDIR}/config.o ${OBJECTDIR}/spi_config.o ${OBJECTDIR}/display_config.o ${OBJECTDIR}/ROT13.o ${OBJECTDIR}/calculadoraRPN.o ${OBJECTDIR}/utilidades.o ${OBJECTDIR}/imagenes.o
+OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/teclado.o ${OBJECTDIR}/config.o ${OBJECTDIR}/spi_config.o ${OBJECTDIR}/display_config.o ${OBJECTDIR}/ROT13.o ${OBJECTDIR}/calculadoraRPN.o ${OBJECTDIR}/utilidades.o ${OBJECTDIR}/imagenes.o ${OBJECTDIR}/tonos.o
 
 # Source Files
-SOURCEFILES=main.s teclado.s config.c spi_config.s display_config.s ROT13.s calculadoraRPN.s utilidades.s imagenes.s
+SOURCEFILES=main.s teclado.s config.c spi_config.s display_config.s ROT13.s calculadoraRPN.s utilidades.s imagenes.s tonos.s
 
 
 
@@ -129,6 +129,11 @@ ${OBJECTDIR}/imagenes.o: imagenes.s  .generated_files/flags/default/8257e2d235ac
 	@${RM} ${OBJECTDIR}/imagenes.o 
 	${MP_CC} $(MP_EXTRA_AS_PRE)  -D__DEBUG  -D__MPLAB_DEBUGGER_PK3=1 -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/imagenes.o imagenes.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_PK3=1,--gdwarf-2,-MD="${OBJECTDIR}/imagenes.o.d" -mdfp="${DFP_DIR}"
 	
+${OBJECTDIR}/tonos.o: tonos.s  .generated_files/flags/default/9582d9b6a9e8b0addc62f61a0944d6598860d780 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/tonos.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  -D__DEBUG  -D__MPLAB_DEBUGGER_PK3=1 -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/tonos.o tonos.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=__MPLAB_DEBUGGER_PK3=1,--gdwarf-2,-MD="${OBJECTDIR}/tonos.o.d" -mdfp="${DFP_DIR}"
+	
 else
 ${OBJECTDIR}/main.o: main.s  .generated_files/flags/default/d086ea0032f3ce3563b2c6ea7b08483af5e8188f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
@@ -169,6 +174,11 @@ ${OBJECTDIR}/imagenes.o: imagenes.s  .generated_files/flags/default/4b4ffb822938
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/imagenes.o 
 	${MP_CC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/imagenes.o imagenes.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--gdwarf-2,-MD="${OBJECTDIR}/imagenes.o.d" -mdfp="${DFP_DIR}"
+	
+${OBJECTDIR}/tonos.o: tonos.s  .generated_files/flags/default/19d2c8435752ac1b2e07c0c51f7338a62188743c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/tonos.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  -c -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${OBJECTDIR}/tonos.o tonos.s  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),--gdwarf-2,-MD="${OBJECTDIR}/tonos.o.d" -mdfp="${DFP_DIR}"
 	
 endif
 

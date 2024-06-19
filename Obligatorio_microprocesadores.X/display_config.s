@@ -119,7 +119,7 @@ imprimir_texto:
             j loop_imprimir_letrero
     
     fin_imprimir_letrero:
-        la $a0, imagen_actual_calculadora
+        move $a0, $a3
         jal cargar_imagen
         # DEVUELVO EL STACK
         lw $ra, ($sp)
