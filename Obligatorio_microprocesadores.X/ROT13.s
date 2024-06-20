@@ -93,6 +93,9 @@ main_rot13:
     jal imprimir_texto
 
     loop_main_rot13:
+        lw $a0, renglon_3_rot
+        jal limpiar_renglon
+
         la $s0, input_rot
         la $t0, string_rot
         sw $t0, puntero_string
@@ -101,8 +104,13 @@ main_rot13:
             li $a0, 0
             jal leer_teclado
             jal esperar_debounce
+            lw $a0, renglon_8_rot
+            jal limpiar_renglon
             beq $v0, 'd', encriptar_rot13
             beq $v0, 'a', fin_rot13
+	    beq $v0, 'b',entrada_invalida
+	    beq $v0, 'c',entrada_invalida
+	    beq $v0, '*',entrada_invalida
             sb $v0, ($s0)
             jal procesar_entrada_rot13
             jal imprimir_string_rot
@@ -115,12 +123,15 @@ main_rot13:
         loop_repetido:
             li $a0, 1
             jal leer_teclado
-	    jal esperar_debounce
+	        jal esperar_debounce
             beq $v0, 'd', encriptar_rot13
             beq $v0, 'a', fin_rot13
+	    beq $v0, 'b',entrada_invalida
+	    beq $v0, 'c',entrada_invalida
+	    beq $v0, '*',entrada_invalida
             lb $t1, -1($s0)
-            bne $v0, $t1, guardar_caracter
             beq $v0, '-', guardo_guion_y_nueva_entrada 
+	    bne $v0, $t1, guardar_caracter
             sb $v0, ($s0)
             addi $s0, $s0, 1
             jal procesar_entrada_rot13
@@ -173,10 +184,10 @@ procesar_entrada_rot13:
         # Itera hasta encontrar '-' y cuenta en $t1 cuntas veces aparecio el caracter
         loop_secuencia_interna:
             beq $s2,'-',fin_secuencia
-	    beq $s2, 0, fin_total_secuencia
+	        beq $s2, 0, fin_total_secuencia
             addi $t1, $t1, 1
             addi $s0, $s0, 1
-	    lb $s2, ($s0)
+	        lb $s2, ($s0)
         j loop_secuencia_interna
         fin_secuencia:
             addi $s0,$s0,1
@@ -188,18 +199,19 @@ procesar_entrada_rot13:
             jal agregar_a_string_rot
             j loop_procesar_entrada_rot13
     
-    # Elimina el último caracter ingresado en string_rot
-    # Usa $t3 (puntero a string_rot)
-    eliminar_ultimo_caracter:
-        la $t4, string_rot
-        la $t3, puntero_string
-        addi $t3, $t3, -1
-        blt $t3, $t4, fin_eliminar_ultimo_caracter
-        sb $0, ($t3)
-        sw $t3, puntero_string
-        fin_eliminar_ultimo_caracter:
-            addi $t0, $t0, 1
-            j loop_procesar_entrada_rot13
+        # Elimina el último caracter ingresado en string_rot
+        # Usa $t3 (puntero a string_rot)
+        eliminar_ultimo_caracter:
+            la $t4, string_rot
+            lw $t3, puntero_string
+            addi $t3, $t3, -1
+            blt $t3, $t4, fin_eliminar_ultimo_caracter
+            sb $0, ($t3)
+            sw $t3, puntero_string
+            fin_eliminar_ultimo_caracter:
+                addi $s0, $s0, 1
+                jal copiar_a_anterior
+                j loop_procesar_entrada_rot13
 
     fin_procesar_entrada_rot13:
         # Devuelvo el STACK
@@ -239,6 +251,14 @@ imprimir_string_rot:
 copiar_a_anterior:
     la $t0, string_rot
     la $t1, string_anterior
+    # Primero limpio la memoria de string anterior
+    limpiar_string_anterior:
+        sb $0, ($t1)
+        addi $t1, $t1, 1
+        lb $t2, ($t1)
+        bne $t2, 0, limpiar_string_anterior
+    # Vuelvo a tomar el addres de string anterior despues de borrarle el contenido
+    la $t1, string_anterior
     loop_copiar_a_anterior:
         lb $t2, ($t0)
         beq $t2, 0, fin_copiar_a_anterior
@@ -248,6 +268,21 @@ copiar_a_anterior:
         j loop_copiar_a_anterior
     fin_copiar_a_anterior:
         jr $ra
+
+
+# Imprime en consola el error de entrada invalida
+entrada_invalida:
+    la $a0, imagen_entrada_invalida
+    jal cargar_imagen
+    li $t0, 0
+    loop_delay_entrada_invalida:
+        addi $t0, $t0, 1
+        beq $t0, 100000, fin_delay_entrada_invalida
+        j loop_delay_entrada_invalida
+    fin_delay_entrada_invalida:
+    la $a0, imagen_actual_rot
+    jal cargar_imagen
+    j limpieza_final
 
 
 # En $a0 el puntero al renglon que hay que limpiar 
@@ -332,7 +367,6 @@ limpiar_string:
         familia_2:
             blt $a1, 5, seguir_familia_2
             jal normalizar_a_4
-            move $a1, $v0
             move $a1, $v0
             seguir_familia_2:
             beq $a1, 1, caracter_a
@@ -517,7 +551,7 @@ limpiar_string:
             j fin_procesar_caracter
 
         caracter_0:
-            li $t1, '0'
+            li $v0, '0'
             j fin_procesar_caracter
         
         caracter_1:
@@ -529,7 +563,7 @@ limpiar_string:
             j fin_procesar_caracter
         
         caracter_3:
-            li $t1, '3'
+            li $v0, '3'
             j fin_procesar_caracter
         
         caracter_4:
@@ -602,10 +636,14 @@ limpiar_string:
 # FUNCION ENCRIPTACION ROT13
 
 encriptar_rot13:
+    
+    # --> Que se fije si el string es vacio y que salte una advertencia
+
     la $t0, string_anterior  # Cargar la dirección del String en $t0
+    lb $t1, ($t0)            # Cargar el primer byte del String en $t1
+    beq $t1, 0, loop_main_rot13        # Si el primer byte es 0 quiere decir que el String está vacío, salgo del bucle
     loop_encriptar:
         lb $t1, ($t0)       # Cargar un byte del String en $t1
-    
         # Verificar si el byte es una letra y convertirla según corresponda
         beq $t1, 0, fin	# Si el byte es 0 quiere decir que llegamos al final, terminamos el bucle y mostramos mensaje de salida.
         bgt $t1, 122, proximo #Si el byte es mayor a 122 quiere decir que no es ninguna letra, lo mismo pasa si es menor a 65.
@@ -636,6 +674,8 @@ fin:
     la $a3, imagen_actual_rot
     jal imprimir_texto
     #-------------------
+
+    limpieza_final:
     # Limpio el input
     la $t0, input_rot
     li $t1, 0

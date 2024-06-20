@@ -34,7 +34,7 @@ leer_teclado:
 		beq $s0, 1, modo_rot13
 		j modo_normal
 		modo_rot13:
-		beq $s1, 100000, paso_el_tiempo 
+		beq $s1, 10000, paso_el_tiempo 
 		modo_normal:
 		addi $s1, $s1, 1 
 
@@ -54,7 +54,7 @@ leer_teclado:
 		li $a0, 3
 		sw $s2, PORTE
 		jal columna_presionada
-		bne $v0, 0, se_registro_ingreso
+ 		bne $v0, 0, se_registro_ingreso
 
 		li $s2, 0x8
 		li $a0, 4

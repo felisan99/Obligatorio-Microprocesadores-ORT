@@ -99,6 +99,7 @@ imprimir_texto:
     lw $s0, ($a1)
     move $s1, $a0
     move $s3, $a2
+    beq $s3, 0, fin_imprimir_letrero
     loop_imprimir_letrero:
         lb $a0, ($s1)
         jal de_char_a_imagen
@@ -175,6 +176,10 @@ de_char_a_imagen:
     beq $a0, '-', cargar_menos
     beq $a0, '+', cargar_mas
     beq $a0, '*', cargar_multiplicacion
+    beq $a0, '.', cargar_punto
+    beq $a0, ',', cargar_coma
+    beq $a0, '!', cargar_exclamacion
+    
     cargar_a:
         la $v0, img_a
         jr $ra
@@ -192,6 +197,7 @@ de_char_a_imagen:
         jr $ra
     cargar_f:
         la $v0, img_f
+	jr $ra
     cargar_g:
         la $v0, img_g
         jr $ra
@@ -286,8 +292,8 @@ de_char_a_imagen:
         la $v0, img_esp
         jr $ra
     cargar_dos_puntos:
-	    la $v0, img_dos_puntos
-	    jr $ra
+	la $v0, img_dos_puntos
+	jr $ra
     cargar_separador:
         la $v0, img_separador
         jr $ra
@@ -300,6 +306,16 @@ de_char_a_imagen:
     cargar_multiplicacion:
         la $v0, img_multiplicacion
         jr $ra
+    cargar_punto:
+        la $v0, img_punto
+        jr $ra
+    cargar_coma:
+        la $v0, img_coma
+        jr $ra
+    cargar_exclamacion:
+        la $v0, img_exclamacion
+        jr $ra
+    
         
 
 

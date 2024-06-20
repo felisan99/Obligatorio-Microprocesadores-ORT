@@ -521,7 +521,7 @@ update_stack_en_pantalla:
     #---------------
     jr $ra
 
-# Imprime en consola el error de entrada invalida
+# Imprime en pantalla el error de entrada invalida
 entrada_invalida:
     la $a0, imagen_entrada_invalida
     jal cargar_imagen

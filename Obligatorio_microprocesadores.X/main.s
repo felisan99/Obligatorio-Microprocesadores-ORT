@@ -130,7 +130,7 @@ main:
         jal main_tono
         j loop_menu
     inicio_extra:
-    #    jal loop_main_extra
+        jal main_calculadora
         j loop_menu
 fin:
     j fin
